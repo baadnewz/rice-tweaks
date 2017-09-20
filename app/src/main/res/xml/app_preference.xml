@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent">
+
+    <PreferenceScreen
+        android:layout_width="fill_parent"
+        android:layout_height="135.0dip"
+        android:key="application"
+        android:layout="@layout/application"/>
+
+    <PreferenceCategory android:title="@string/lockscreen_preference_title"/>
+    <Preference
+        android:defaultValue="5"
+        android:icon="@drawable/ic_battery"
+        android:key="tweaks_battery_flash_level"
+        android:summary="@string/battery_percentage_flash_summary"
+        android:title="@string/battery_percentage_flash_title"/>
+
+    <PreferenceCategory android:title="@string/lockscreen_preference_title"/>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_lock"
+        android:key="tweaks_quick_unlock"
+        android:summary="@string/tweaks_quick_unlock_summary"
+        android:summaryOn="@string/enabled"
+        android:title="@string/tweaks_quick_unlock_title"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_lock"
+        android:key="tweaks_scramble_pin"
+        android:summary="@string/tweaks_scramble_pin_summary"
+        android:title="@string/tweaks_scramble_pin_title"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_lock"
+        android:key="tweaks_lockscreen_rotation"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/tweaks_lockscreen_rotation_title"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_lock"
+        android:key="tweaks_lockscreen_guide_text"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/tweaks_lockscreen_guide_text_summaryOn"
+        android:title="@string/tweaks_lockscreen_guide_text_title"/>
+</PreferenceScreen>

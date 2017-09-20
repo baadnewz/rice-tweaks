@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent">
+
+    <Preference
+        android:key="sysapp"
+        android:title="@string/sysapp"/>
+
+    <SwitchPreference
+        android:key="force_english"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/force_english_title"/>
+
+    <SwitchPreference
+        android:key="switch_theme"
+        android:summary="@string/light_theme"
+        android:summaryOn="@string/dark_theme"
+        android:title="@string/theme"/>
+
+    <PreferenceCategory
+        android:key="romupdatescat"
+        android:title="@string/romupdate"/>
+
+    <SwitchPreference
+        android:key="romupdate_start"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/onstart"/>
+
+    <SwitchPreference
+        android:key="romupdate"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/in_background"/>
+    <EditTextPreference
+        android:dependency="romupdate"
+        android:hint="@string/nightlyupdateinterval_hint"
+        android:inputType="number"
+        android:key="romupdateinterval"
+        android:selectAllOnFocus="true"
+        android:title="@string/nightlyupdateinterval_title"/>
+
+
+    <PreferenceCategory
+        android:key="romupdatesnightlycat"
+        android:title="@string/romupdatenightly"/>
+
+    <SwitchPreference
+        android:key="nightlyupdate_start"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/onstart"/>
+
+    <SwitchPreference
+        android:key="nightlyupdate"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/in_background"/>
+    <EditTextPreference
+        android:dependency="nightlyupdate"
+        android:hint="@string/nightlyupdateinterval_hint"
+        android:inputType="number"
+        android:key="nightlyupdateinterval"
+        android:selectAllOnFocus="true"
+        android:title="@string/nightlyupdateinterval_title"/>
+
+</PreferenceScreen>

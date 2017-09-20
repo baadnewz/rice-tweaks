@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:layout_width="fill_parent"
+              android:layout_height="fill_parent"
+              android:orientation="vertical">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <net.bohush.geometricprogressview.GeometricProgressView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:paddingTop="100dp"
+            app:gp_color="?attr/splashscreenAnimationColor"
+            app:gp_duration="800"
+            app:gp_figure_padding="5dp"
+            app:gp_number_of_angles="4"/>
+
+    </RelativeLayout>
+</LinearLayout>

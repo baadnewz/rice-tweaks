@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory android:title="@string/header_color_preference_title"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_colors"
+        android:key="tweaks_unlock_header_colors"
+        android:summary="@string/tweaks_allow_color_change_summary"
+        android:summaryOn="@string/tweaks_allow_color_change_summaryOn"
+        android:title="@string/tweaks_allow_color_change"/>
+
+    <!-- ALL customcolorpicker.ColorPreference must have android:defaultvalue in order for settings.system saved values to work
+    Original code found here: https://github.com/jrummyapps/colorpicker as well as Parameter WIKI-->
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="-14342875"
+        android:dependency="tweaks_unlock_header_colors"
+        android:key="tweaks_header_text_color"
+        android:title="@string/tweaks_header_text_title"
+        app:cpv_showAlphaSlider="true"
+        app:cpv_showColorShades="true"/>
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="-1289411291"
+        android:dependency="tweaks_unlock_header_colors"
+        android:key="tweaks_header_icon_color"
+        android:title="@string/tweaks_header_icon_title"
+        app:cpv_showAlphaSlider="true"
+        app:cpv_showColorShades="true"/>
+
+    <Preference
+        android:key="tweaks_header_stock_look"
+        android:title="@string/tweaks_stock_header_colors_title"/>
+
+</PreferenceScreen>

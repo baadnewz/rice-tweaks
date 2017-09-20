@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <Preference
+        android:icon="@drawable/ic_backup"
+        android:key="tweaks_backup_colors"
+        android:title="@string/tweaks_backup_colors"/>
+
+    <Preference
+        android:icon="@drawable/ic_reset"
+        android:key="tweaks_restore_colors"
+        android:title="@string/tweaks_restore_colors"/>
+
+    <Preference
+        android:icon="@drawable/ic_restore"
+        android:key="tweaks_stock_look"
+        android:title="@string/tweaks_stock_colors_title"/>
+</PreferenceScreen>

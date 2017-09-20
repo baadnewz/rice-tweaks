@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent">
+
+    <PreferenceScreen
+        android:layout_width="fill_parent"
+        android:layout_height="135.0dip"
+        android:key="misc"
+        android:layout="@layout/misc"/>
+
+    <PreferenceCategory android:title="@string/misc_preference_title"/>
+    <Preference
+        android:icon="@drawable/ic_safetynet"
+        android:key="csc_selection"
+        android:summary="@string/tweaks_csc_selection_summary"
+        android:title="@string/tweaks_csc_selection_title"/>
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_usb"
+        android:key="tweaks_usb_wake"
+        android:summary="@string/disabled"
+        android:summaryOn="@string/enabled"
+        android:title="@string/tweaks_usb_wake_title"/>
+
+    <ListPreference
+        android:defaultValue="0"
+        android:entries="@array/tweaks_install_location_entries"
+        android:entryValues="@array/tweaks_install_location_values"
+        android:icon="@drawable/ic_storage"
+        android:key="tweaks_install_location"
+        android:summary="%s"
+        android:title="@string/tweaks_install_location_title"/>
+
+</PreferenceScreen>

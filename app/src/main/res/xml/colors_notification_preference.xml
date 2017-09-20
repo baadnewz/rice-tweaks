@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_colors"
+        android:key="tweaks_unlock_notification_colors"
+        android:summary="@string/tweaks_allow_color_change_summary"
+        android:summaryOn="@string/tweaks_allow_color_change_summaryOn"
+        android:title="@string/tweaks_allow_color_change"/>
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:icon="@drawable/ic_blur"
+        android:key="tweaks_allow_transparent_notifications"
+        android:summary="@string/tweaks_allow_transparent_notification_summary"
+        android:title="@string/tweaks_allow_transparent_notification_title"/>
+
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="-328966"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:key="tweaks_notification_background_color"
+        android:title="@string/tweaks_notif_background_title"
+        app:cpv_showAlphaSlider="true"
+        app:cpv_showColorShades="true"/>
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="1"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:key="tweaks_notification_title_text_color"
+        android:title="@string/tweaks_notif_title_text_title"/>
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="1"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:key="tweaks_notification_summary_text_color"
+        android:title="@string/tweaks_notif_summary_text_title"/>
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="-651877083"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:key="tweaks_notif_footer_text_color"
+        android:title="@string/tweaks_notif_footer_text_title"
+        app:cpv_showAlphaSlider="true"
+        app:cpv_showColorShades="true"/>
+
+    <com.ice.box.customcolorpicker.ColorPreference
+        android:defaultValue="-328966"
+        android:dependency="tweaks_unlock_notification_colors"
+        android:key="tweaks_notif_footer_background_color"
+        android:title="@string/tweaks_notif_footer_background_title"
+        app:cpv_showAlphaSlider="true"
+        app:cpv_showColorShades="true"/>
+
+    <Preference
+        android:key="tweaks_notif_stock_look"
+        android:title="@string/tweaks_stock_notif_colors_title"/>
+
+</PreferenceScreen>

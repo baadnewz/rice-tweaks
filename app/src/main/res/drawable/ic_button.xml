@@ -1,0 +1,9 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="42dp"
+        android:height="42dp"
+        android:viewportHeight="96.0"
+        android:viewportWidth="96.0">
+    <path
+        android:fillColor="@color/loudvolume_icon_color"
+        android:pathData="M66.3,19.5H29.7c-5.6,0 -10.2,4.6 -10.2,10.2v36.5c0,5.6 4.6,10.2 10.2,10.2h36.5c5.6,0 10.2,-4.6 10.2,-10.2V29.7C76.5,24.1 72,19.5 66.3,19.5zM70.7,66.3c0,2.4 -2,4.4 -4.4,4.4H29.7c-2.4,0 -4.4,-2 -4.4,-4.4V29.7c0,-2.4 2,-4.4 4.4,-4.4h36.5c2.4,0 4.4,2 4.4,4.4V66.3z"/>
+</vector>

@@ -1,0 +1,48 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  android:layout_width="fill_parent"
+                  android:layout_height="fill_parent">
+    <PreferenceScreen
+        android:layout_width="fill_parent"
+        android:layout_height="135.0dip"
+        android:key="header_image"
+        android:layout="@layout/header_image"/>
+
+    <PreferenceCategory android:title="@string/status">
+
+        <Preference
+            android:icon="@drawable/ic_license"
+            android:key="buy_premium"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="@string/general_info">
+
+        <Preference
+            android:icon="@drawable/ic_rom_version"
+            android:key="rom_Version"
+            android:title="@string/rom_version"/>
+
+        <Preference
+            android:icon="@drawable/ic_changelog"
+            android:key="rom_changelog"
+            android:title="@string/rom_changelog"/>
+
+        <Preference
+            android:icon="@drawable/ic_settings"
+            android:key="app_Version"
+            android:selectable="false"
+            android:title="@string/app_version"/>
+
+        <Preference
+            android:icon="@drawable/ic_xda"
+            android:key="xda_thread"
+            android:summary="@string/xda_thread_summary"
+            android:title="@string/xda_thread"/>
+
+        <Preference
+            android:icon="@drawable/ic_telegram"
+            android:key="telegram_chat"
+            android:summary="@string/telegram_chat_summary"
+            android:title="@string/telegram_chat"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

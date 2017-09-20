@@ -1,0 +1,18 @@
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+        android:width="42dp"
+        android:height="42dp"
+        android:viewportHeight="96.0"
+        android:viewportWidth="96.0">
+    <path
+        android:fillColor="@color/compact_qstiles_icon_color"
+        android:pathData="M83,21.1c0,-3.9 -3.2,-7.1 -7.1,-7.1H60.1c-3.9,0 -7.1,3.2 -7.1,7.1v15.9c0,3.9 3.2,7.1 7.1,7.1h15.9c3.9,0 7.1,-3.2 7.1,-7.1V21.1zM79,36.9c0,1.7 -1.4,3.1 -3.1,3.1H60.1c-1.7,0 -3.1,-1.4 -3.1,-3.1V21.1c0,-1.7 1.4,-3.1 3.1,-3.1h15.9c1.7,0 3.1,1.4 3.1,3.1V36.9z"/>
+    <path
+        android:fillColor="@color/compact_qstiles_icon_color"
+        android:pathData="M45,21.1c0,-3.9 -3.2,-7.1 -7.1,-7.1H22.1c-3.9,0 -7.1,3.2 -7.1,7.1v15.9c0,3.9 3.2,7.1 7.1,7.1h15.9c3.9,0 7.1,-3.2 7.1,-7.1V21.1zM41,36.9c0,1.7 -1.4,3.1 -3.1,3.1H22.1c-1.7,0 -3.1,-1.4 -3.1,-3.1V21.1c0,-1.7 1.4,-3.1 3.1,-3.1h15.9c1.7,0 3.1,1.4 3.1,3.1V36.9z"/>
+    <path
+        android:fillColor="@color/compact_qstiles_icon_color"
+        android:pathData="M83,59.1c0,-3.9 -3.2,-7.1 -7.1,-7.1H60.1c-3.9,0 -7.1,3.2 -7.1,7.1v15.9c0,3.9 3.2,7.1 7.1,7.1h15.9c3.9,0 7.1,-3.2 7.1,-7.1V59.1zM79,74.9c0,1.7 -1.4,3.1 -3.1,3.1H60.1c-1.7,0 -3.1,-1.4 -3.1,-3.1V59.1c0,-1.7 1.4,-3.1 3.1,-3.1h15.9c1.7,0 3.1,1.4 3.1,3.1V74.9z"/>
+    <path
+        android:fillColor="@color/compact_qstiles_icon_color"
+        android:pathData="M45,59.1c0,-3.9 -3.2,-7.1 -7.1,-7.1H22.1c-3.9,0 -7.1,3.2 -7.1,7.1v15.9c0,3.9 3.2,7.1 7.1,7.1h15.9c3.9,0 7.1,-3.2 7.1,-7.1V59.1zM41,74.9c0,1.7 -1.4,3.1 -3.1,3.1H22.1c-1.7,0 -3.1,-1.4 -3.1,-3.1V59.1c0,-1.7 1.4,-3.1 3.1,-3.1h15.9c1.7,0 3.1,1.4 3.1,3.1V74.9z"/>
+</vector>

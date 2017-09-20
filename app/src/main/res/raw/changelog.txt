@@ -1,0 +1,193 @@
+<html>
+  <head>
+    <style type='text/css'>
+      a            { color:#a0a0e0 }
+      div.title    {
+        color:#C0F0C0;
+        font-size:1.2em;
+        font-weight:bold;
+        margin-top:1em;
+        margin-bottom:0.5em;
+        text-align:center }
+      div.subtitle {
+        color:#C0F0C0;
+        font-size:0.8em;
+        margin-bottom:1em;
+        text-align:center }
+      div.freetext { color:#F0F0F0 }
+      div.list     { color:#C0C0F0 }
+    </style>
+  </head>
+  <body>
+      $ 1.3.8
+          % Version 1.3.8
+          _ 2017-09-21
+          * updated English strings credit @ohayoubaka
+          * fixed background update checker and notification
+      $ 1.3.7
+          % Version 1.3.7
+          _ 2017-09-19
+          * more fixes
+      $ 1.3.6
+          % Version 1.3.6
+          _ 2017-09-19
+          * updated links to match new website
+          * fixed startup FC if no internet connection or website down
+          * Per Application Immersive mode selection (premium only)
+      $ 1.3.5
+        % Version 1.3.5
+        _ 2017-09-13
+        * various fixes
+      $ 1.3.4
+        % Version 1.3.4
+        _ 2017-09-11
+        * Select list for which applications to run in immersive mode
+      $ 1.3.3
+        % Version 1.3.3
+        _ 2017-08-23
+        * Updated app to match ROM tweaks
+        * G93x support
+      $ 1.3.2
+        % Version 1.3.2
+        _ 2017-08-08
+        * updated app to match rom tweaks
+      $ 1.3.1
+        % Version 1.3.1
+        _ 2017-08-02
+        * improvements
+      $ 1.3.0
+        % Version 1.3.0
+        _ 2017-07-20
+        * updated links to match the new website
+      $ 1.2.9
+        % Version 1.2.9
+        _ 2017-07-19
+        * fixed auto opening link on startup
+      $ 1.2.7
+        % Version 1.2.7
+        _ 2017-07-11
+        * Merged statusbar into SystemUI/Buttons fragment
+        * Fixed default values for list preferences
+        * Added tweak for low battery camera flash limit
+        * Added dynamic navigation bar color tweak
+      $ 1.2.6
+        % Version 1.2.6
+        _ 2017-07-05
+        * updated DE translations
+      $ 1.2.5
+        % Version 1.2.5
+        _ 2017-07-05
+        * fixed showing ROM Update notification even if the version were the same
+        * fixes in backgroud notification
+      $ 1.2.4
+        % Version 1.2.4
+        _ 2017-07-05
+        * fixed not showing correct installed nightly version
+      $ 1.2.3
+        % Version 1.2.3
+        _ 2017-07-05
+        * fixed changelog icon on dark theme
+        * fixed not disabling update notification
+      $ 1.2.2
+        % Version 1.2.2
+        _ 2017-07-05
+        * fixed FCs affecting some users
+        * reworked ROM updates code
+      $ 1.2.1
+        % Version 1.2.1
+        _ 2017-07-04
+        * bug fixes and improvements
+        * nightly detection + notification if newer nightly is available
+        * background notification for both stable and nightly
+      $ 1.2.0
+        % Version 1.2.0
+        _ 2017-06-20
+        * bug fixes and improvements
+      $ 1.1.9
+        % Version 1.1.9
+        _ 2017-06-14
+        * script fixes
+        * quick unlock, lock quicksettings on lockscreen tweaks
+      $ 1.1.8
+        % Version 1.1.8
+        _ 2017-06-06
+        * NavBar Icon Colors
+        * Reboot notification only for the tweaks that actually require it
+        * other fixes and improvement
+      $ 1.1.7
+        % Version 1.1.7
+        _ 2017-05-31
+        * UI Improvements
+        * Navbar Colors Switch
+        * code fixes
+      $ 1.1.6
+        % Version 1.1.6
+        _ 2017-05-25
+        * new UI
+        * some code improvements
+        * probably new bugs
+      $ 1.1.5
+        % Version 1.1.5
+        _ 2017-05-24
+        * added alpha channel selector for ColorPicker
+      $ 1.1.4
+        % Version 1.1.4
+        _ 2017-05-24
+        * removed ads for non premium users
+        * better colors management interface
+      $ 1.1.3
+        % Version 1.1.3
+        _ 2017-05-20
+        * added UI Animation Control within app
+      $ 1.1.2
+        % Version 1.1.2
+        _ 2017-05-16
+        * fixed scripts for color backup and restore
+      $ 1.1.1
+        % Version 1.1.1
+        _ 2017-05-15
+        * layout and style improvements
+        * added tweaks for number of quick qs toggles
+      $ 1.1.0
+        % Version 1.1.0
+        _ 2017-05-13
+        * fixed update service crash
+      $ 1.0.9
+        % Version 1.0.9
+        _ 2017-05-12
+        * color tab fixes
+      $ 1.0.8
+        % Version 1.0.8
+        _ 2017-05-10
+        * fixed rom version detection
+      $ 1.0.7
+        % Version 1.0.7
+        _ 2017-05-10
+        * fixed not recognizing licensing
+      $ 1.0.6
+        % Version 1.0.6
+        _ 2017-05-10
+        * changing clock position doesnt require reboot
+        * color changing requires full system reboot
+      $ 1.0.5
+        % Version 1.0.5
+        _ 2017-05-10
+        * functionality and UI improvements
+      $ 1.0.4
+        % Version 1.0.4
+        _ 2017-05-08
+        * enabled Immersive Mode Tweak / Quick Settings Tile
+        * removed app update related code
+      $ 1.0.3
+        % Version 1.0.3
+        _ 2017-05-08
+        * fixed app crash if app isn't system app
+        * fixed tweaks not taking effect (you need RenovateICE nightly r32 or newer) / Alternative push RiCE to /system/priv-app
+        * fixed Licensing (might need a few hours to properly work)
+      $ 1.0.0
+        % Version 1.0.0
+        _ 2017-05-02
+        * initial release
+      $ END_OF_CHANGE_LOG
+  </body>
+</html>

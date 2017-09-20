@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="samsung_default_color">@android:color/white</color>
+    <color name="samsung_default_dark_color">@android:color/black</color>
+
+    <color name="pixel_blue">#5e97f6</color>
+    <color name="lighter_gray">#8b8b8b</color>
+    <color name="gray">#444444</color>
+    <!-- Misc -->
+    <color name="safetynet_icon_color">#ffa000</color>
+    <color name="storage_icon_color">#3e2723</color>
+    <color name="usb_icon_color">#f50057</color>
+    <!-- Status Bar -->
+    <color name="battery_icon_color">#e57373</color>
+    <color name="battery_bar_icon_color">#546e7a</color>
+    <color name="blur_icon_color">@android:color/black</color>
+    <color name="clock_icon_color">#ffb74d</color>
+    <color name="clock_position_icon_color">#8d6e63</color>
+    <color name="compact_qstiles_icon_color">#ec407a</color>
+    <color name="dt2s_icon_color">#7cb342</color>
+    <color name="keyboard_icon_color">#ab7575</color>
+    <color name="lock_icon_color">#4db6ac</color>
+    <color name="multiuser_icon_color">#7986cb</color>
+    <color name="notification_icon_color">#92a750</color>
+    <color name="pull_icon_color">#90a4ae</color>
+    <!-- UI -->
+    <color name="back_icon_color">#455a64</color>
+    <color name="brightness_icon_color">#673ab7</color>
+    <color name="fingerprint_icon_color">#9c27b0</color>
+    <color name="immersive_icon_color">#ffa000</color>
+    <color name="loudvolume_icon_color">#795548</color>
+    <color name="recents_icon_color">#558b2f</color>
+    <color name="rotate_icon_color">#fdd835</color>
+    <!-- Home -->
+    <color name="licence_color">#af5d86</color>
+    <color name="rom_version_color">#6edfac</color>
+    <color name="changelog_color">#d6cc20</color>
+    <color name="settings_color">#735fab</color>
+    <color name="xda_color">#c97442</color>
+    <color name="telegram_color">#2090d6</color>
+    <!-- fixed from baad -->
+    <color name="colorPrimary">#22a6e4</color>
+    <color name="colorPrimaryDark">#22a6e4</color>
+    <color name="colorAccent">#22a6e4</color>
+</resources>
