@@ -16,4 +16,27 @@
         android:layout_weight="1"
         android:orientation="vertical"/>
 
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ads="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/adContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp">
+
+        <com.google.android.gms.ads.AdView
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/banner_home_footer"/>
+
+        <ImageView
+            android:id="@+id/ads"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_gravity="top"
+            android:layout_margin="0dp"
+            android:key="ice_play"
+            android:visibility="gone"/>
+    </LinearLayout>
 </LinearLayout>

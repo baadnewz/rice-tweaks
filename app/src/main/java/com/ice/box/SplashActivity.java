@@ -154,10 +154,10 @@ public class SplashActivity extends AppCompatActivity {
 
     private void isFreeVersion() {
         //Reading and writing old app keys values
-        boolean isInstalledPro = isPackageInstalledAndEnabled("com.renovate.premium") || isPackageInstalledAndEnabled("com.ice.premium");
-        boolean isInstalledDonation = isPackageInstalledAndEnabled("com.renovate.premium2") || isPackageInstalledAndEnabled("com.ice.premium2");
-        sharedPref.edit().putBoolean("isInstalledPro", isInstalledPro).apply();
-        sharedPref.edit().putBoolean("isInstalledDonation", isInstalledDonation).apply();
+        //boolean isInstalledPro = isPackageInstalledAndEnabled("com.renovate.premium") || isPackageInstalledAndEnabled("com.ice.premium");
+        //boolean isInstalledDonation = isPackageInstalledAndEnabled("com.renovate.premium2") || isPackageInstalledAndEnabled("com.ice.premium2");
+        //sharedPref.edit().putBoolean("isInstalledPro", isInstalledPro).apply();
+        //sharedPref.edit().putBoolean("isInstalledDonation", isInstalledDonation).apply();
         //Reading In app billing values
         boolean isMonthly = (sharedPref.getBoolean("isMonthly", false));
         boolean isYearly = (sharedPref.getBoolean("isYearly", false));
@@ -168,7 +168,7 @@ public class SplashActivity extends AppCompatActivity {
         boolean isLegacyLicense = sharedPref.getBoolean(isLegacyLicenseKey, false);
 
         //Setting global boolean for premium
-        if (!isMonthly && !isYearly && !isPremium2 && !isPremium5 && !isPremium10 && !isInstalledDonation && !isInstalledPro && !isLegacyLicense) {
+        if (!isMonthly && !isYearly && !isPremium2 && !isPremium5 && !isPremium10 && !isLegacyLicense) {
             sharedPref.edit().putBoolean(isFreeVersionKey, true).apply();
             //RESTING PROPS ONLY FOR PREMIUM
             sharedPref.edit().putInt("THEMEID", R.style.ThemeLight).apply();
@@ -180,9 +180,9 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void isForceEnglish() {
-        boolean forceEnglish = (sharedPref.getBoolean("isForceEnglish", false));
+        boolean forceEnglish = (sharedPref.getBoolean("forceEnglish", false));
         if (forceEnglish) {
-            sharedPref.edit().putBoolean("isForceEnglish", true).apply();
+            sharedPref.edit().putBoolean("forceEnglish", true).apply();
             String languageToLoad = "en"; // your language
             Locale locale = new Locale(languageToLoad);
             Locale.setDefault(locale);
@@ -191,7 +191,7 @@ public class SplashActivity extends AppCompatActivity {
             getBaseContext().getResources().updateConfiguration(config,
                     getBaseContext().getResources().getDisplayMetrics());
         } else {
-            sharedPref.edit().putBoolean("isForceEnglish", false).apply();
+            sharedPref.edit().putBoolean("forceEnglish", false).apply();
             Locale locale = Resources.getSystem().getConfiguration().locale;
             Locale.setDefault(locale);
             Configuration config = new Configuration();
@@ -230,16 +230,15 @@ public class SplashActivity extends AppCompatActivity {
             if (SystemProperties.get("ro.chipname").equals("exynos8895")) {
                 sharedPref.edit().putBoolean("isGalaxyS8", true).apply();
                 sharedPref.edit().putBoolean("isGalaxyS7", false).apply();
-
             } else if (SystemProperties.get("ro.chipname").equals("exynos8890")) {
                 sharedPref.edit().putBoolean("isGalaxyS8", false).apply();
                 sharedPref.edit().putBoolean("isGalaxyS7", true).apply();
-
             } else {
                 sharedPref.edit().putBoolean("isGalaxyS8", false).apply();
                 sharedPref.edit().putBoolean("isGalaxyS7", false).apply();
             }
         } catch (NullPointerException e) {
+            Log.i(this.getClass().getName() + DEBUGTAG, "Error reading what glaxy");
 
         }
 
@@ -334,8 +333,7 @@ public class SplashActivity extends AppCompatActivity {
             URL url;
             Authenticator.setDefault(new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-					//TODO (1) USE YOUR OWN
-                    return new PasswordAuthentication("user", "password".toCharArray());
+                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
                 }
             });
             HttpURLConnection urlConnection = null;
@@ -396,8 +394,7 @@ public class SplashActivity extends AppCompatActivity {
             URL url;
             Authenticator.setDefault(new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-					//TODO (1) USE YOUR OWN
-                    return new PasswordAuthentication("user", "password".toCharArray());
+                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
                 }
             });
             HttpURLConnection urlConnection = null;

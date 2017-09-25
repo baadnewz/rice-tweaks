@@ -1,8 +1,10 @@
 package com.ice.box.iab;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
@@ -14,6 +16,8 @@ import com.ice.box.SplashActivity;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.ice.box.helpers.Constants.base64EncodedPublicKey;
+import static com.ice.box.helpers.Constants.payload;
 
 
 public class MyBilling {
@@ -25,9 +29,6 @@ public class MyBilling {
 
     // (arbitrary) request code for the purchase flow
     private static final int RC_REQUEST = 10111;
-    private final static String base64EncodedPublicKey =
-            "use your own";
-    private final static String payload = "use your own";
     private Activity activity;
     // The helper object
     private IabHelper mHelper;
@@ -121,18 +122,23 @@ public class MyBilling {
                     switch (purchase.getSku()) {
                         case SKU_ICE_PREMIUM_10:
                             sharedPref.edit().putBoolean("isPremium10", true).apply();
+                            restartSelfOnLicenseOK();
                             break;
                         case SKU_ICE_PREMIUM_5:
                             sharedPref.edit().putBoolean("isPremium5", true).apply();
+                            restartSelfOnLicenseOK();
                             break;
                         case SKU_ICE_PREMIUM_2:
                             sharedPref.edit().putBoolean("isPremium2", true).apply();
+                            restartSelfOnLicenseOK();
                             break;
                         case SKU_ICE_PREMIUM_MONTHLY:
                             sharedPref.edit().putBoolean("isMonthly", true).apply();
+                            restartSelfOnLicenseOK();
                             break;
                         case SKU_ICE_PREMIUM_YEARLY:
                             sharedPref.edit().putBoolean("isYearly", true).apply();
+                            restartSelfOnLicenseOK();
                             break;
                     }
 
@@ -335,5 +341,27 @@ public class MyBilling {
                 bld.create().show();
             }
         });
+    }
+
+
+    public void restartSelfOnLicenseOK() {
+        final Context context = SplashActivity.splashActivity.getApplicationContext();
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
+        alertDialog.setTitle(context.getResources().getString(R.string.app_name));
+        alertDialog.setMessage(context.getString(R.string.tweakshelper_restartSelfOnLicenseOK_dialog));
+        alertDialog.setPositiveButton(context.getResources().getString(R.string.ok), new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        AlarmManager am = (AlarmManager)   context.getSystemService(Context.ALARM_SERVICE);
+/*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
+                PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
+                        | PendingIntent.FLAG_CANCEL_CURRENT));*/
+                        Intent i = context.getPackageManager()
+                                .getLaunchIntentForPackage(context.getPackageName());
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        context.startActivity(i);
+                    }
+                });
+        alertDialog.show();
     }
 }

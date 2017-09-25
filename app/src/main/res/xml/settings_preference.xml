@@ -9,12 +9,14 @@
 
     <SwitchPreference
         android:key="force_english"
+        android:icon="@drawable/ic_language"
         android:summary="@string/disabled"
         android:summaryOn="@string/enabled"
         android:title="@string/force_english_title"/>
 
     <SwitchPreference
         android:key="switch_theme"
+        android:icon="@drawable/ic_theme"
         android:summary="@string/light_theme"
         android:summaryOn="@string/dark_theme"
         android:title="@string/theme"/>
@@ -49,17 +51,20 @@
 
     <SwitchPreference
         android:key="nightlyupdate_start"
+        android:icon="@drawable/ic_update"
         android:summary="@string/disabled"
         android:summaryOn="@string/enabled"
         android:title="@string/onstart"/>
 
     <SwitchPreference
         android:key="nightlyupdate"
+        android:icon="@drawable/ic_update"
         android:summary="@string/disabled"
         android:summaryOn="@string/enabled"
         android:title="@string/in_background"/>
     <EditTextPreference
         android:dependency="nightlyupdate"
+        android:icon="@drawable/ic_update"
         android:hint="@string/nightlyupdateinterval_hint"
         android:inputType="number"
         android:key="nightlyupdateinterval"

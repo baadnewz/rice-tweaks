@@ -19,7 +19,7 @@ import com.ice.box.helpers.Tools;
 @SuppressWarnings("unused")
 public class SysInfo extends PreferenceFragment implements Preference.OnPreferenceClickListener {
     private final static String MAGISK_VER = "magisk.version";
-    private int mThemeId = R.style.ThemeLight;
+    //private int mThemeId = R.style.ThemeLight;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -30,16 +30,16 @@ public class SysInfo extends PreferenceFragment implements Preference.OnPreferen
         boolean isDeviceRootPresent = (sharedPref.getBoolean("isDeviceRootPresent", false));
         String magiskver = SystemProperties.get(MAGISK_VER);
         Boolean magisk = (magiskver != null && !magiskver.isEmpty());
-
-        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         Preference filterPref;
+
+/*        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         if (mThemeId == R.style.ThemeDark) {
             filterPref = findPreference("sysinfo");
             filterPref.setLayoutResource(R.layout.sysinfo_dark);
-        }
+        }*/
 
-        filterPref = findPreference("sysinfo");
-        filterPref.setSelectable(false);
+/*        filterPref = findPreference("sysinfo");
+        filterPref.setSelectable(false);*/
 
         filterPref = findPreference("root_Version");
         filterPref.setOnPreferenceClickListener(this);

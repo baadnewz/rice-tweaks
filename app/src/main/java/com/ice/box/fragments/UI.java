@@ -33,7 +33,9 @@ import java.util.Set;
 import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.ShowNavbarKey;
 import static com.ice.box.helpers.Constants.allowCustomNavBarHeightKey;
+import static com.ice.box.helpers.Constants.backToKillKey;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
+import static com.ice.box.helpers.Constants.isNote8PortKey;
 import static com.ice.box.helpers.Constants.navBarHeightKey;
 import static com.ice.box.helpers.Constants.renovateFingerprintProp;
 
@@ -64,7 +66,7 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
     private AlertDialog navBarHeightDialog;
     private int navBarHeightProgress;
 
-    private int mThemeId = R.style.ThemeLight;
+    //private int mThemeId = R.style.ThemeLight;
 
     //Plus button
     private final Button.OnClickListener navBarHeightPlusListener = new Button.OnClickListener() {
@@ -133,15 +135,16 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.ui_preference);
-        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         Preference filterPref;
+/*        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         if (mThemeId == R.style.ThemeDark) {
             filterPref = findPreference("ui");
             filterPref.setLayoutResource(R.layout.ui_dark);
-        }
+        }*/
         isFreeVersion = sharedPref.getBoolean(isFreeVersionKey, true);
         boolean isGalaxyS8 = sharedPref.getBoolean("isGalaxyS8", false);
         boolean isGalaxyS7 = sharedPref.getBoolean("isGalaxyS7", false);
+        boolean isNotePort = sharedPref.getBoolean(isNote8PortKey, false);
 
         tweaksHelper = new TweaksHelper(this.getContext());
         seekDialog = new SeekDialog(this.getContext());
@@ -220,27 +223,9 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 immersivePerAppList.setNegativeButtonText(R.string.cancel);
                 immersivePerAppList.setPositiveButtonText(R.string.choose);
                 //immersivePerAppList.setDialogIcon(R.mipmap.ic_launcher_white);
-                immersivePerAppList.setDialogTitle(getResources().getString(R.string.immersive_perapp_summary));
+                immersivePerAppList.setDialogTitle(R.string.immersive_perapp_summary);
             }
         }.start();
-
-/*        immersivePerAppList.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-            @Override
-            public boolean onPreferenceChange(Preference preference, Object newValue) {
-                try {
-                    Settings.Global.putString(
-                            getContext().getContentResolver(),
-                            "policy_control",
-                            "immersive.full=" + newValue.toString());
-                    Log.d(this.getClass().getName(), "Successful!");
-                    Log.d(DEBUGTAG, "newImmersiveListSlections: " + "immersive.full=" + newValue.toString());
-                } catch (Exception e) {
-                    tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
-                    Log.d(DEBUGTAG, "newImmersiveListSlections: " + "immersive.full=" + newValue.toString());
-                }
-                return true;
-            }
-        });*/
 
         filterPref = findPreference("tweaks_fingerprint_unlock");
         filterPref.setOnPreferenceClickListener(this);
@@ -266,12 +251,16 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 "tweaks_all_rotations", 0) == 1);
         checkPref.setChecked(checked);
 
-        filterPref = findPreference("tweaks_back_to_kill");
+        filterPref = findPreference(backToKillKey);
         filterPref.setOnPreferenceClickListener(this);
-        checkPref = (SwitchPreference) findPreference("tweaks_back_to_kill");
+        checkPref = (SwitchPreference) findPreference(backToKillKey);
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
-                "tweaks_back_to_kill", 0) == 1);
+                backToKillKey, 0) == 1);
         checkPref.setChecked(checked);
+        if (isNotePort) {
+            getPreferenceScreen().removePreference(findPreference(backToKillKey));
+        }
+
 
         filterPref = findPreference("tweaks_disable_volume_warning");
         filterPref.setOnPreferenceClickListener(this);
@@ -634,12 +623,12 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
             }
         }
-        if (preference.getKey().equals("tweaks_back_to_kill")) {
+        if (preference.getKey().equals(backToKillKey)) {
             boolean checked = ((SwitchPreference) preference).isChecked();
             int value = (checked ? 1 : 0);
             try {
                 Settings.System.putInt(this.getContext().getContentResolver(),
-                        "tweaks_back_to_kill", value);
+                        backToKillKey, value);
                 Log.d(this.getClass().getName(), "Successful!");
             } catch (Exception e) {
                 tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));

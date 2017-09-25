@@ -3,11 +3,11 @@
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
-    <PreferenceScreen
+<!--    <PreferenceScreen
         android:layout_width="fill_parent"
         android:layout_height="135.0dip"
         android:key="misc"
-        android:layout="@layout/misc"/>
+        android:layout="@layout/misc"/>-->
 
     <PreferenceCategory android:title="@string/misc_preference_title"/>
     <Preference

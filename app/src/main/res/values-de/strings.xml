@@ -11,7 +11,7 @@
     <string name="yes">Ja</string>
     <string name="no">Nein</string>
     <string name="ok">Ok</string>
-    <string name="fail_read_app_version">Appversion auslesen fehlgeschlagen</string>
+    <string name="fail_read_app_version">Auslesen der Appversion fehlgeschlagen</string>
     <string name="nav_rom_options">ROM Control</string>
     <string name="nightlies_no_connection">Du benötigst eine Internetverbindung um die Änderungen anzusehen.</string>
     <string name="nightlies_summary">Klicke hier um die letzten Änderungen anzusehen</string>
@@ -35,7 +35,7 @@
     <string name="donation10">10€ Spendenlizenz</string>
     <string name="detected">erkannt</string>
     <string name="thankyou">Danke für deinen Support!</string>
-    <string name="thankyoumultiple">Mehrere Lizenzen gefunden!\nIch bin für immer dankbar. Danke!</string>
+    <string name="thankyoumultiple">Mehrere Lizenzen gefunden!\nWir sind für immer dankbar, danke!</string>
     <string name="subscription">Monatliche Abonnement Lizenz</string>
     <string name="settings_license">Lizenz</string>
     <string name="subscription_period_monthly">~1.1€ / Month</string>
@@ -137,11 +137,11 @@
     <string name="tweaks_show_multi_user_title">Multi-User Avatar</string>
     <string name="tweaks_double_tap_sleep_title">Doppelklick zum Ausschalten</string>
     <string name="tweaks_double_tap_sleep_summary">Doppelt auf die Statusleiste zum Bildschirmsperren drücken</string>
-    <string name="tweaks_qs_rows_title">Schnelleinstellungen Reihen</string>
+    <string name="tweaks_qs_rows_title">Schnelleinstellungsreihen</string>
     <string name="tweaks_qs_rows_summary">Anzahl der Reihen in den Schnelleinstellungen</string>
-    <string name="tweaks_qs_columns_title">Schnelleinstellungen Reihen</string>
+    <string name="tweaks_qs_columns_title">Schnelleinstellungen pro Reihe</string>
     <string name="tweaks_qs_columns_summary">Anzahl der Schnellstarteinstellung pro Reihe</string>
-    <string name="tweaks_quick_qs_buttons_title">Schnelleinstellungen</string>
+    <string name="tweaks_quick_qs_buttons_title">Schnelleinstellungen Kachelanzahl</string>
     <string name="tweaks_quick_qs_buttons_summary">Anzahl der Schnelleinstellungen ändern</string>
     <string name="tweaks_brightness_slider_title">Helligkeitsschieber ausblenden</string>
     <string name="tweaks_brightness_slider_summary">Helligkeitsschieber ist sichtbar</string>
@@ -245,7 +245,7 @@
     <string name="tweakshelper_reboot_camera">Neustart der Kamera benötigt!</string>
     <string name="kill_package">beendet</string>
     <string name="kill_package_error">konnte nicht beendet werden, bitte manuell beenden</string>
-    <string name="matt_donation">Hey Leute! Hier ist Mastt (@mwilky) und ich brauche wirklich eure Hilfe. Bitte klickt auf OK um unsere Website aufzurufen und den Grund zu erfahren! Danke!</string>
+    <string name="matt_donation">Hey Leute! Hier ist Matt (@mwilky) und ich brauche wirklich eure Hilfe. Bitte klickt auf OK um unsere Website aufzurufen und den Grund zu erfahren! Danke!</string>
     <string name="signal_icon_color_preference_title">Netzwerk Icons</string>
     <string name="statusbar_color_preference_title">Statusleiste</string>
     <string name="tweaks_airplane_mode_color">Flugzeugmodus Iconfarbe</string>
@@ -262,7 +262,7 @@
     <string name="tweaks_statusbar_clock_color">Farbe der Uhr</string>
     <string name="tweaks_statusbar_icon_color">Systemsymbole Iconfarbe</string>
     <string name="tweaks_wifi_signal_color">WLAN Iconfarbe</string>
-    <string name="tweaks_allow_custom_navbar_height_title">Erlaube die Höhe der Navigationsleiste anzupassen</string>
+    <string name="tweaks_allow_custom_navbar_height_title">Höhe der Navigationsleiste anpassen</string>
     <string name="tweaks_navbar_height_title">Höhe der Navigationsleiste (nur Hochkantformat)</string>
     <string name="tweaks_scramble_pin_summary">Funktioniert nur mit dem Samsung Standard Theme (Farbveränderungen funktionieren immer)</string>
     <string name="tweaks_scramble_pin_title">Zufälliges PIN-Keypad</string>
@@ -281,4 +281,22 @@
     <string name="free_notification2">"Optionen nur in der Premium version. Bitte "</string>
     <string name="immersive_perapp_empty">Deine Auto-Vollbild-App Liste ist leer! Wähle zuerst eine oder mehrere Apps aus!</string>
     <string name="immersive_perapp_hint">Vollbildmodus: Bestimmte Apps muss ausgewählt sein</string>
+    <string name="nightlies_error">Beim Speichern des Changelogs ist ein Fehler aufgetreten.</string>
+    <string name="legacy_license">Legacy-Lizenz</string>
+    <string name="legacy_category">Legacy-Linzensierung</string>
+    <string name="icebox_oldice_title">Alte Schlüsselaktivierung</string>
+    <string name="icebox_oldice_summary">Nutze diese Aktivierungsmethode falls du einen alten Renovate-Home Schlüssel gekauft hast.\nBevor du diese Methode nutzt, stelle bitte sicher, dass du vorher im Renovate ICE Support Chat mit den Entwicklern gesprochen hast und der angemeldete Google-Account der gleiche wie beim Kauf ist.\nUm den Prozess zu beschleunigen, stelle bitte sicher dass du einen Beweis des Kaufes bereithälst.</string>
+    <string name="icebox_oldice_summary_binded">Anwendung lizensiert für:</string>
+    <string name="icebox_oldice_summary_binded2">Falls du einen anderen Account nutzen möchtest, lösche die App-Daten,\ndann kannst du einen neuen Account hinzufügen.\nBehalte bitte im Hinterkopf dass du nur einen Google Account nutzen kannst.</string>
+    <string name="icebox_oldice_toast">Anwendung ist bereits lizensiert, falls du einen neuen Account nutzen möchtest, lösche bitte die Anwendungsdaten und fange von vorne an.</string>
+    <string name="icebox_oldice_toast_nolicense">Sorry, wir konnten deine Lizenz nicht aktivieren.\nFalls du der Meinung bist, dass das ein Fehler ist, kontaktiere uns bitte im Telegram Support Chat.</string>
+    <string name="icebox_oldice_toast_yeslicense">Lizenz erfolgreich verfiziert. Bitte App neustarten!</string>
+    <string name="donation_obsolete">Warnung! Alter App-Schlüssel gefunden!!\n\nBitte kontaktiere das Renovate Team über Telegram um deinen Key in den neuen Legacy-Schlüssel umzuwandeln.\nMit der nächsten Rice Tweaks Version wird der alte Key endgültig nicht mehr funktionieren.</string>
+    <string name="free_version_popup2">Bitte unterstütze doch die Entwicklung mit dem Kauf einer Lizenz oder blocke nicht die Werbung.</string>
+    <string name="tweakshelper_restartSelfOnLicenseOK_dialog">Lizenz erfolgreich überprüft. App wird nun neu gestartet, um neue Lizenz anzuwenden.</string>
+    <string name="tweaks_secure_window_title">Bildschirmfoto in Sicherheitsapps</string>
+    <string name="tweaks_secure_window_summaryOn">Bildschirmfoto nicht erlaubt</string>
+    <string name="tweaks_secure_window_summary">Bildschirmfoto erlaubt</string>
+    <string name="tweaks_hide_iris_title">Iris-Vorschau</string>
+    <string name="tweaks_hide_iris_summary">Verstecke die Iris-Vorschau auf dem Sperrbildschirm</string>
 </resources>

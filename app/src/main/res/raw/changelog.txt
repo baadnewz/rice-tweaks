@@ -19,11 +19,20 @@
     </style>
   </head>
   <body>
+      $ 1.3.9
+          % Version 1.3.9
+          _ 2017-09-23
+          * finalized legacy licensing (Thanks @zafer61 @severance1 for working the server side)
+          * removed old app key license support, if you owned one legitimately follow the instructions in app on how to license your app again
+          * fixed clicking on license preference in home tab, now it opens licensing page
+          * added ADS for free version only (Sorry!)
       $ 1.3.8
           % Version 1.3.8
           _ 2017-09-21
           * updated English strings credit @ohayoubaka
           * fixed background update checker and notification
+          * added Legacy License (will completely replace old key app licensing in next version)
+          * other fixes
       $ 1.3.7
           % Version 1.3.7
           _ 2017-09-19

@@ -13,6 +13,10 @@
     <!-- Status Bar -->
     <color name="battery_icon_color">#e57373</color>
     <color name="battery_bar_icon_color">#546e7a</color>
+    <color name="battery_bar_icon_color1">#ffa000</color>
+    <color name="battery_bar_icon_color2">#22a6e4</color>
+    <color name="battery_bar_icon_color3">#7cb342</color>
+    <color name="battery_bar_icon_color4">#90a4ae</color>
     <color name="blur_icon_color">@android:color/black</color>
     <color name="clock_icon_color">#ffb74d</color>
     <color name="clock_position_icon_color">#8d6e63</color>
@@ -42,4 +46,16 @@
     <color name="colorPrimary">#22a6e4</color>
     <color name="colorPrimaryDark">#22a6e4</color>
     <color name="colorAccent">#22a6e4</color>
+    <color name="ic_security">#22a6e4</color>
+    <color name="ic_iris">#ffa000</color>
+    <color name="ic_navbarheight">#22a6e4</color>
+    <color name="ic_lang">#22a6e4</color>
+    <color name="ic_theme">#ffb74d</color>
+    <color name="ic_update">#7cb342</color>
+    <color name="ic_rootstatus">#ff0000</color>
+    <color name="ic_busybox">#ffa000</color>
+    <color name="ic_devicemodel">#7cb342</color>
+    <color name="ic_securitylevel">#22a6e4</color>
+    <color name="ic_androidversion">#9c27b0</color>
+    <color name="ic_donation">#22a6e4</color>
 </resources>

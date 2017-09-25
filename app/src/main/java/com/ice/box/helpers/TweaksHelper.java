@@ -1,5 +1,6 @@
 package com.ice.box.helpers;
 
+import android.app.AlarmManager;
 import android.app.AlertDialog;
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -404,5 +405,25 @@ public class TweaksHelper {
     public static boolean isEmptyString(String text) {
         return (text == null || text.trim().equals("null") || text.trim()
                 .length() <= 0);
+    }
+
+    public void restartSelfOnLicenseOK() {
+        AlertDialog.Builder alertDialog = new AlertDialog.Builder(mContext);
+        alertDialog.setTitle(mContext.getResources().getString(R.string.app_name));
+        alertDialog.setMessage(mContext.getString(R.string.tweakshelper_restartSelfOnLicenseOK_dialog));
+        alertDialog.setPositiveButton(mContext.getResources().getString(R.string.ok), new
+                DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        AlarmManager am = (AlarmManager)   mContext.getSystemService(Context.ALARM_SERVICE);
+/*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
+                PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
+                        | PendingIntent.FLAG_CANCEL_CURRENT));*/
+                        Intent i = mContext.getPackageManager()
+                                .getLaunchIntentForPackage(mContext.getPackageName());
+                        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        mContext.startActivity(i);
+                    }
+                });
+        alertDialog.show();
     }
 }

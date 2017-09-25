@@ -19,7 +19,13 @@ import com.ice.box.helpers.SeekDialog;
 import com.ice.box.helpers.TweaksHelper;
 
 import static com.ice.box.helpers.Constants.ScramblePinKey;
+import static com.ice.box.helpers.Constants.ShowNavbarKey;
 import static com.ice.box.helpers.Constants.batteryPercentageFlashKey;
+import static com.ice.box.helpers.Constants.hideIrisKey;
+import static com.ice.box.helpers.Constants.isNote8PortKey;
+import static com.ice.box.helpers.Constants.lockscreenRotationKey;
+import static com.ice.box.helpers.Constants.quickUnlockKey;
+import static com.ice.box.helpers.Constants.secureWindowKey;
 
 
 @SuppressWarnings("unused")
@@ -102,7 +108,7 @@ public class App extends PreferenceFragment implements
 
     //END BATTERY PERCENTAGE Flash SEEKBAR
 
-    private int mThemeId = R.style.ThemeLight;
+    //private int mThemeId = R.style.ThemeLight;
 
     public void onCreate(Bundle savedInstanceState) {
 
@@ -111,24 +117,28 @@ public class App extends PreferenceFragment implements
         tweaksHelper = new TweaksHelper(this.getContext());
         seekDialog = new SeekDialog(this.getContext());
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean isNotePort = sharedPref.getBoolean(isNote8PortKey, false);
 
         SwitchPreference checkPref;
         boolean checked;
-        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
+/*        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         if (mThemeId == R.style.ThemeDark) {
             filterPref = findPreference("application");
             filterPref.setLayoutResource(R.layout.application_dark);
-        }
+        }*/
 
         filterPref = findPreference("tweaks_battery_flash_level");
         filterPref.setOnPreferenceClickListener(this);
 
-        filterPref = findPreference("tweaks_lockscreen_rotation");
+        filterPref = findPreference(lockscreenRotationKey);
         filterPref.setOnPreferenceClickListener(this);
-        checkPref = (SwitchPreference) findPreference("tweaks_lockscreen_rotation");
+        checkPref = (SwitchPreference) findPreference(lockscreenRotationKey);
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
-                "tweaks_lockscreen_rotation", 0) == 1);
+                lockscreenRotationKey, 0) == 1);
         checkPref.setChecked(checked);
+        if (isNotePort) {
+            getPreferenceScreen().removePreference(findPreference(lockscreenRotationKey));
+        }
 
         filterPref = findPreference("tweaks_lockscreen_guide_text");
         filterPref.setOnPreferenceClickListener(this);
@@ -137,12 +147,15 @@ public class App extends PreferenceFragment implements
                 "tweaks_lockscreen_guide_text", 0) == 1);
         checkPref.setChecked(checked);
 
-        filterPref = findPreference("tweaks_quick_unlock");
+        filterPref = findPreference(quickUnlockKey);
         filterPref.setOnPreferenceClickListener(this);
-        checkPref = (SwitchPreference) findPreference("tweaks_quick_unlock");
+        checkPref = (SwitchPreference) findPreference(quickUnlockKey);
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
-                "tweaks_quick_unlock", 0) == 1);
+                quickUnlockKey, 0) == 1);
         checkPref.setChecked(checked);
+        if (isNotePort) {
+            getPreferenceScreen().removePreference(findPreference(quickUnlockKey));
+        }
 
         filterPref = findPreference(ScramblePinKey);
         filterPref.setOnPreferenceClickListener(this);
@@ -150,17 +163,31 @@ public class App extends PreferenceFragment implements
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
                 ScramblePinKey, 0) == 1);
         checkPref.setChecked(checked);
+
+        filterPref = findPreference(secureWindowKey);
+        filterPref.setOnPreferenceClickListener(this);
+        checkPref = (SwitchPreference) findPreference(secureWindowKey);
+        checked = (Settings.System.getInt(this.getContext().getContentResolver(),
+                secureWindowKey, 1) == 1);
+        checkPref.setChecked(checked);
+
+        filterPref = findPreference(hideIrisKey);
+        filterPref.setOnPreferenceClickListener(this);
+        checkPref = (SwitchPreference) findPreference(hideIrisKey);
+        checked = (Settings.System.getInt(this.getContext().getContentResolver(),
+                hideIrisKey, 0) == 1);
+        checkPref.setChecked(checked);
     }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        if (preference.getKey().equals("tweaks_lockscreen_rotation")) {
+        if (preference.getKey().equals(lockscreenRotationKey)) {
             boolean checked = ((SwitchPreference) preference).isChecked();
             int value = (checked ? 1 : 0);
             try {
                 Settings.System.putInt(
                         this.getContext().getContentResolver(),
-                        "tweaks_lockscreen_rotation",
+                        lockscreenRotationKey,
                         value);
                 Log.d(this.getClass().getName(), "Successful!");
                 tweaksHelper.createSystemUINotification();
@@ -182,13 +209,13 @@ public class App extends PreferenceFragment implements
                 tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
             }
         }
-        if (preference.getKey().equals("tweaks_quick_unlock")) {
+        if (preference.getKey().equals(quickUnlockKey)) {
             boolean checked = ((SwitchPreference) preference).isChecked();
             int value = (checked ? 1 : 0);
             try {
                 Settings.System.putInt(
                         this.getContext().getContentResolver(),
-                        "tweaks_quick_unlock",
+                        quickUnlockKey,
                         value);
                 Log.d(this.getClass().getName(), "Successful!");
             } catch (Exception e) {
@@ -233,6 +260,32 @@ public class App extends PreferenceFragment implements
                 Settings.System.putInt(
                         this.getContext().getContentResolver(),
                         ScramblePinKey,
+                        value);
+                Log.d(this.getClass().getName(), "Successful!");
+            } catch (Exception e) {
+                tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+            }
+        }
+        if (preference.getKey().equals(secureWindowKey)) {
+            boolean checked = ((SwitchPreference) preference).isChecked();
+            int value = (checked ? 1 : 0);
+            try {
+                Settings.System.putInt(
+                        this.getContext().getContentResolver(),
+                        secureWindowKey,
+                        value);
+                Log.d(this.getClass().getName(), "Successful!");
+            } catch (Exception e) {
+                tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+            }
+        }
+        if (preference.getKey().equals(hideIrisKey)) {
+            boolean checked = ((SwitchPreference) preference).isChecked();
+            int value = (checked ? 1 : 0);
+            try {
+                Settings.System.putInt(
+                        this.getContext().getContentResolver(),
+                        hideIrisKey,
                         value);
                 Log.d(this.getClass().getName(), "Successful!");
             } catch (Exception e) {

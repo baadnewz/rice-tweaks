@@ -1,39 +1,45 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
-    <PreferenceScreen
+<!--    <PreferenceScreen
         android:layout_width="fill_parent"
         android:layout_height="135.0dip"
         android:key="sysinfo"
-        android:layout="@layout/sysinfo"/>
+        android:layout="@layout/sysinfo"/>-->
 
     <Preference
         android:key="root_Version"
+        android:icon="@drawable/ic_rootstatus"
         android:summary=""
         android:title="@string/su_binary_present"/>
 
     <Preference
         android:key="rom_busybox"
+        android:icon="@drawable/ic_busybox"
         android:summary=""
         android:title="@string/busybox_version"/>
 
     <Preference
         android:key="device_model"
+        android:icon="@drawable/ic_devicemodel"
         android:summary=""
         android:title="@string/device_model"/>
 
     <Preference
         android:key="android_Version"
+        android:icon="@drawable/ic_androidversion"
         android:summary=""
         android:title="@string/android_version"/>
 
     <Preference
         android:key="android_Security"
+        android:icon="@drawable/ic_securitylevel"
         android:summary=""
         android:title="@string/android_security_patch"/>
 
     <Preference
         android:key="kernel_version"
+        android:icon="@drawable/ic_devicemodel"
         android:summary=""
         android:title="@string/kernel_version"/>
 

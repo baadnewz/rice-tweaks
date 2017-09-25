@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -16,12 +17,16 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.preference.SwitchPreference;
+import android.text.Spannable;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.ice.box.MainActivity;
 import com.ice.box.R;
+import com.ice.box.SplashActivity;
 import com.ice.box.helpers.TweaksHelper;
 import com.ice.box.iab.MyBilling;
 
@@ -29,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
 import static com.ice.box.helpers.Constants.DEBUGTAG;
@@ -77,6 +83,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         isPremium5 = (sharedPref.getBoolean("isPremium5", false));
         isPremium10 = (sharedPref.getBoolean("isPremium10", false));
         isFreeVersion = (sharedPref.getBoolean(isFreeVersionKey, false));
+        boolean isLegacyLicense = sharedPref.getBoolean(isLegacyLicenseKey, false);
         googleAccount = sharedPref.getString(googleAccountKey, null);
         Preference checkPref;
         addPreferencesFromResource(R.xml.license_preference);
@@ -89,12 +96,12 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         if (isFreeVersion) {
             licenseType.append(getResources().getString(R.string.free_license));
         } else {
-            if (isInstalledPro || isPremium2) {
+            if (isPremium2) {
                 licenseType.append(getResources().getString(R.string.donation2)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
-            if (isInstalledDonation || isPremium5) {
+            if (isPremium5) {
                 licenseType.append(getResources().getString(R.string.donation5)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
@@ -108,6 +115,11 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
 
             if (isMonthly || isYearly) {
                 licenseType.append(getResources().getString(R.string.subscription)).append(" ")
+                        .append(getResources().getString(R.string.detected)).append("\n");
+                counter++;
+            }
+            if (isLegacyLicense) {
+                licenseType.append(getResources().getString(R.string.legacy_license)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
@@ -152,7 +164,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
 
         filterPref = findPreference("icebox.oldice");
         filterPref.setOnPreferenceClickListener(this);
-        if(!TweaksHelper.isEmptyString(googleAccount)) {
+        if (!TweaksHelper.isEmptyString(googleAccount)) {
             //filterPref.setEnabled(false);
             filterPref.setSummary(getResources().getString(R.string.icebox_oldice_summary_binded) + " "
                     + googleAccount + "\n\n" + getResources().getString(R.string.icebox_oldice_summary_binded2));
@@ -194,7 +206,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                     AlertDialogIabNotSupported();
                 }
             case "icebox.oldice":
-                if(TweaksHelper.isEmptyString(googleAccount)) {
+                if (TweaksHelper.isEmptyString(googleAccount)) {
                     try {
                         Intent intent = AccountPicker.newChooseAccountIntent(null, null,
                                 new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
@@ -214,20 +226,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         alertDialog.setTitle(getResources().getString(R.string.app_name));
         alertDialog.setIcon(R.mipmap.ic_key);
         alertDialog.setMessage(getResources().getString(R.string.iab_error));
-        alertDialog.setPositiveButton(getResources().getString(R.string.yes),
-                new DialogInterface.OnClickListener() {
-                    private String PREM_APP =
-                            "https://play.google.com/store/search?q=mwilky%20renovate";
-
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent();
-                        intent.setAction(Intent.ACTION_VIEW);
-                        intent.addCategory(Intent.CATEGORY_BROWSABLE);
-                        intent.setData(Uri.parse(PREM_APP));
-                        startActivity(intent);
-                    }
-                });
-        alertDialog.setNegativeButton(getResources().getString(R.string.no),
+        alertDialog.setNeutralButton(getResources().getString(R.string.ok),
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -238,7 +237,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
 
     @Override
     public void onActivityResult(final int requestCode, final int resultCode,
-                                    final Intent data) {
+                                 final Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
             new getLegacyLicense().execute(accountName);
@@ -251,34 +250,35 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
 
         @Override
         protected String doInBackground(String... strings) {
-                URL url;
-                HttpURLConnection urlConnection = null;
-                try {
-                    url = new URL(
-                            riceWebsiteLink + riceManagementFolder + "/" + "search.php=" + strings[0]);
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL(
+                        riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0]);
 /*                    url = new URL(
                             "http://renovate-ice.com/svn/renovate-dream/trunk/scripts/FullWipe.sh"
                     );*/
-                    urlConnection = (HttpURLConnection) url
-                            .openConnection();
-                    urlConnection.setConnectTimeout(5000);
-                    BufferedReader bufferedReader = new BufferedReader(
-                            new InputStreamReader(urlConnection.getInputStream()));
-                    String line = null;
+                Log.d(DEBUGTAG, "URL: " + url);
+                urlConnection = (HttpURLConnection) url
+                        .openConnection();
+                urlConnection.setConnectTimeout(5000);
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(urlConnection.getInputStream()));
+                String line = null;
 
-                    while ((line = bufferedReader.readLine()) != null) {
-                        result += line + "\n";
-                    }
-                    bufferedReader.close();
-                } catch (Exception e) {
-                    e.printStackTrace();
-                } finally {
-                    if (urlConnection != null) {
-                        urlConnection.disconnect();
-                    }
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line + "\n";
                 }
-                sharedPref.edit().putString(googleAccountKey, strings[0]).apply();
-                return result.toString();
+                bufferedReader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+            sharedPref.edit().putString(googleAccountKey, strings[0]).apply();
+            return result.toString();
         }
 
         @Override
@@ -293,10 +293,10 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                 filterPref.setSummary(getResources().getString(R.string.icebox_oldice_summary_binded) + " "
                         + googleAccount + "\n\n" + getResources().getString(R.string.icebox_oldice_summary_binded2));
                 //Notify the user that license is activated and he/she needs to restart app
-                tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_yeslicense));
-
+                //tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_yeslicense));
                 Log.d(DEBUGTAG, "LicenseChecked: TRUE");
-            }else{
+                tweaksHelper.restartSelfOnLicenseOK();
+            } else {
                 //Activation failed. removing Google Account and setting legacy license to false
                 tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_nolicense));
                 sharedPref.edit().remove(googleAccountKey).apply();
@@ -304,6 +304,25 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                 Log.d(DEBUGTAG + " " + this.getClass().getName(), "LicenseChecked: FALSE");
             }
         }
+    }
+
+
+    private void restartSelf() {
+        AlarmManager am = (AlarmManager)   getActivity().getSystemService(Context.ALARM_SERVICE);
+/*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
+                PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
+                        | PendingIntent.FLAG_CANCEL_CURRENT));*/
+        Intent i = getActivity().getBaseContext().getPackageManager()
+                .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
+        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(i);
+
+/*        Intent mStartActivity = new Intent(getContext(), SplashActivity.class);
+        int mPendingIntentId = 123456;
+        PendingIntent mPendingIntent = PendingIntent.getActivity(getContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager mgr = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
+        System.exit(0);*/
     }
 
 }

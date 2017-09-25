@@ -2,6 +2,9 @@ package com.ice.box.fragments;
 
 
 import android.app.AlertDialog;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,14 +12,18 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.support.v4.view.GravityCompat;
+import android.support.v7.widget.Toolbar;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
+import com.ice.box.MainActivity;
 import com.ice.box.R;
 import com.ice.box.helpers.Constants;
 import com.ice.box.helpers.SystemProperties;
@@ -38,7 +45,7 @@ import static com.ice.box.helpers.Constants.xdaS8;
 
 @SuppressWarnings("unused")
 public class Home extends PreferenceFragment implements Preference.OnPreferenceClickListener {
-    StringBuilder licensetype = new StringBuilder();
+    StringBuilder licenseType = new StringBuilder();
     int counter;
     private int mThemeId = R.style.ThemeLight;
 
@@ -97,41 +104,41 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
         filterPref = findPreference("buy_premium");
         filterPref.setOnPreferenceClickListener(this);
         if (isFreeVersion) {
-            licensetype.append(getResources().getString(R.string.free_license));
+            licenseType.append(getResources().getString(R.string.free_license));
         } else {
-            if (isInstalledPro || isPremium2) {
-                licensetype.append(getResources().getString(R.string.donation2)).append(" ")
+            if (isPremium2) {
+                licenseType.append(getResources().getString(R.string.donation2)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
-            if (isInstalledDonation || isPremium5) {
-                licensetype.append(getResources().getString(R.string.donation5)).append(" ")
+            if (isPremium5) {
+                licenseType.append(getResources().getString(R.string.donation5)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
             if (isPremium10) {
-                licensetype.append(getResources().getString(R.string.donation10)).append(" ")
+                licenseType.append(getResources().getString(R.string.donation10)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
             if (isMonthly || isYearly) {
-                licensetype.append(getResources().getString(R.string.subscription)).append(" ")
+                licenseType.append(getResources().getString(R.string.subscription)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
             if (isLegacyLicense) {
-                licensetype.append(getResources().getString(R.string.legacy_license)).append(" ")
+                licenseType.append(getResources().getString(R.string.legacy_license)).append(" ")
                         .append(getResources().getString(R.string.detected)).append("\n");
                 counter++;
             }
             if (counter > 1) {
-                licensetype.append(getResources().getString(R.string
+                licenseType.append(getResources().getString(R.string
                         .thankyoumultiple)).append("\n");
             } else if (counter > 0) {
-                licensetype.append(getResources().getString(R.string.thankyou));
+                licenseType.append(getResources().getString(R.string.thankyou));
             }
         }
-        filterPref.setSummary(licensetype);
+        filterPref.setSummary(licenseType);
 
         setPreferencesValuesForRomVersion();
         setPreferencesValuesForChangelog();
@@ -164,13 +171,11 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
         //Fragment fragment;
 
 
-/*        if (preference.getKey().equals("buy_premium")) {
-            Fragment someFragment = new SomeFragment();
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id., someFragment ); // give your fragment container id in first parameter
-            transaction.addToBackStack(null);  // if written, this transaction will be added to backstack
-            transaction.commit();
-        }*/
+        if (preference.getKey().equals("buy_premium")) {
+            MainActivity.isFragmentOpen = true;
+            switchFragment("License", getString(R.string.settings_license));
+
+        }
 
         if (preference.getKey().equals("rom_Version")) {
 
@@ -233,6 +238,7 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
         }
         return true;
     }
+
     private void setPreferencesValuesForRomVersion() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String romstatus;
@@ -333,4 +339,20 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
 
     }
 
+    private void switchFragment(final String fragmentClass, final String fragmentTitle) {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Toolbar toolbar = (Toolbar) getActivity().findViewById(R.id.toolbar);
+                toolbar.setTitle(fragmentTitle);
+                FragmentTransaction fm = getFragmentManager().beginTransaction();
+                fm.setCustomAnimations(android.R.animator.fade_in, android.R.animator.fade_out);
+                fm.replace(R.id.container,
+                        Fragment.instantiate(
+                                getContext(),
+                                "com.ice.box.fragments." + fragmentClass))
+                        .commit();
+            }
+        }, 0);
+    }
 }

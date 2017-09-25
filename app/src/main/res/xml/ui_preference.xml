@@ -4,12 +4,12 @@
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
-    <PreferenceScreen
+<!--    <PreferenceScreen
         android:layout_width="fill_parent"
         android:layout_height="135.0dip"
         android:key="ui"
         android:layout="@layout/ui"
-        android:selectable="false"/>
+        android:selectable="false"/>-->
 
     <PreferenceCategory
         android:key="statusbar_title"
@@ -88,6 +88,7 @@
 
     <SwitchPreference
         android:defaultValue="true"
+        android:icon="@drawable/ic_battery_bar1"
         android:dependency="battery_bar"
         android:key="battery_bar_animate"
         android:summaryOff="@string/battery_bar_animate_style_summary"
@@ -96,6 +97,7 @@
 
     <SwitchPreference
         android:defaultValue="false"
+        android:icon="@drawable/ic_battery_bar2"
         android:dependency="battery_bar"
         android:key="battery_bar_style"
         android:summary="@string/battery_bar_center_style_summary"
@@ -104,6 +106,7 @@
 
     <com.ice.box.customcolorpicker.ColorPreference
         android:defaultValue="-13388315"
+        android:icon="@drawable/ic_battery_bar3"
         android:dependency="battery_bar"
         android:key="battery_bar_color"
         android:title="@string/battery_bar_color_title"
@@ -112,6 +115,7 @@
 
     <ListPreference
         android:defaultValue="2"
+        android:icon="@drawable/ic_battery_bar4"
         android:dependency="battery_bar"
         android:entries="@array/battery_bar_thickness_entries"
         android:entryValues="@array/battery_bar_thickness_values"
@@ -136,7 +140,7 @@
         android:defaultValue="3"
         android:entries="@array/qs_tile_row_entries"
         android:entryValues="@array/qs_tile_row_values"
-        android:icon="@drawable/ic_row"
+        android:icon="@drawable/ic_column"
         android:key="qs_tile_row"
         android:summary="%s"
         android:title="@string/tweaks_qs_rows_title"/>
@@ -145,7 +149,7 @@
         android:defaultValue="4"
         android:entries="@array/qs_tile_column_entries"
         android:entryValues="@array/qs_tile_column_values"
-        android:icon="@drawable/ic_column"
+        android:icon="@drawable/ic_row"
         android:key="qs_tile_column"
         android:summary="%s"
         android:title="@string/tweaks_qs_columns_title"/>
@@ -218,12 +222,14 @@
 
     <SwitchPreference
         android:defaultValue="false"
+        android:icon="@drawable/ic_navbarheight"
         android:key="tweaks_custom_navbar_height"
         android:title="@string/tweaks_allow_custom_navbar_height_title"/>
 
     <Preference
         android:defaultValue="128"
         android:key="tweaks_navbar_height"
+        android:icon="@drawable/ic_navbarheight"
         android:title="@string/tweaks_navbar_height_title"/>
 
     <PreferenceCategory

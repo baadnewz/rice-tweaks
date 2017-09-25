@@ -27,7 +27,7 @@ public class Misc extends PreferenceFragment implements
     TweaksHelper tweaksHelper;
     Preference filterPref;
     ListPreference iLocation;
-    private int mThemeId = R.style.ThemeLight;
+    //private int mThemeId = R.style.ThemeLight;
 
     public void onCreate(Bundle savedInstanceState) {
         SwitchPreference checkPref;
@@ -39,11 +39,13 @@ public class Misc extends PreferenceFragment implements
         seekDialog = new SeekDialog(this.getContext());
         boolean checked;
 
+/*
         mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         if (mThemeId == R.style.ThemeDark) {
             filterPref = findPreference("misc");
             filterPref.setLayoutResource(R.layout.misc_dark);
         }
+*/
 
         filterPref = findPreference("tweaks_install_location");
         filterPref.setOnPreferenceChangeListener(this);

@@ -3,12 +3,14 @@
     <PreferenceCategory android:title="@string/status">
         <Preference
             android:key="license_status"
+            android:icon="@drawable/ic_license"
             />
     </PreferenceCategory>
 
     <PreferenceCategory android:title="@string/subscription_category">
         <Preference
             android:defaultValue="false"
+            android:icon="@drawable/ic_key"
             android:key="icebox.monthly"
             android:title="@string/subscription_monthly_title"/>
     </PreferenceCategory>
@@ -16,20 +18,24 @@
     <PreferenceCategory android:title="@string/donation_category">
         <Preference
             android:defaultValue="false"
+            android:icon="@drawable/ic_key"
             android:key="icebox.donation2"
             android:title="@string/icebox.donation2"/>
         <Preference
             android:defaultValue="false"
+            android:icon="@drawable/ic_key"
             android:key="icebox.donation5"
             android:title="@string/icebox.donation5"/>
         <Preference
             android:defaultValue="false"
+            android:icon="@drawable/ic_key"
             android:key="icebox.donation10"
             android:title="@string/icebox.donation10"/>
     </PreferenceCategory>
     <PreferenceCategory android:title="@string/legacy_category">
         <Preference
             android:defaultValue="false"
+            android:icon="@drawable/ic_license"
             android:key="icebox.oldice"
             android:title="@string/icebox_oldice_title"
             android:summary="@string/icebox_oldice_summary"/>

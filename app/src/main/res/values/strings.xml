@@ -36,12 +36,13 @@
     <string name="free_notification">\"Options available only in premium version. Please consider purchasing a key.\"</string>
     <string name="free_notification2">"Options available only in premium version. Please consider purchasing a key."</string>
     <string name="error_license_flow">Error launching in-app purchases. Please relaunch the application!</string>
+    <string name="donation_obsolete">Old app licensing detected.\nWith next update it will be deprecated, please contact Renovate Team via Telegram in order to activate your new legacy license.</string>
     <string name="donation2">Donation: 2€ License</string>
     <string name="donation5">Donation: 5€ License</string>
     <string name="donation10">Donation: 10€ License</string>
     <string name="legacy_license">Legacy License</string>
     <string name="detected">has been found.</string>
-    <string name="thankyou">You are awesome, thank you a lot for your support!</string>
+    <string name="thankyou">You are awesome, thank you for your support!</string>
     <string name="thankyoumultiple">Multiple licenses detected!\nWe are forever grateful, thank you!</string>
     <string name="subscription">Monthly subscription license</string>
     <string name="settings_license">License</string>
@@ -50,7 +51,7 @@
     <string name="onetimefee2">~2€</string>
     <string name="onetimefee5">~5€</string>
     <string name="onetimefee10">~10€</string>
-    <string name="iab_error">In App Billing is not supported on your device yet.\n\nWould you like to purchase Google Play Store App Key?</string>
+    <string name="iab_error">In App Billing is not supported on your device yet.\n\nPlease contact us via Telegram support chat for other licensing options</string>
     <string name="changelog_full_title">App Changelog</string>
     <string name="changelog_title">What\'s New</string>
     <string name="changelog_ok_button">OK</string>
@@ -68,6 +69,7 @@
     <string name="exit">Exit</string>
     <string name="error_write_settings">Sorry that did not work, you need to have the app installed as system app or manually grant permission: pm grant com.ice.box android.permission.WRITE_SECURE_SETTINGS</string>
     <string name="immersive_perapp_empty">Your "Immersive Mode (Per App)" list is empty. Make sure to select your apps next.</string>
+    <string name="free_version_popup2">Please consider supporting development by either buying a license or at least not blocking the ads</string>
     <!--HELPER-->
     <string name="update_notification">Update</string>
     <string name="later_notification">Dismiss</string>
@@ -85,6 +87,7 @@
     <string name="tweakshelper_reboot_sysui1">SystemUI Restart required!</string>
     <string name="tweakshelper_reboot_camera">Camera Restart required!</string>
     <string name="tweakshelper_not_recommended">Turning this tweak on is not recommended!</string>
+    <string name="tweakshelper_restartSelfOnLicenseOK_dialog">License verified successfully.App will now restart to apply new license.</string>
     <string name="tweakshelper_safetynet">In order to pass SafetyNet, you either need to be unrooted or use Magisk, with Magisk Hide enabled.</string>
     <string name="tweakshelper_csc">Changing your CSC in the following screen will wipe your device!</string>
     <string name="tweakshelper_error">Error!</string>
@@ -134,6 +137,11 @@
     <string name="tweaks_scramble_pin_title">Randomize pin keypad</string>
     <string name="tweaks_scramble_pin_summary">This only work if stock samsung theme is applied (colour tweaks work fine)</string>
     <string name="tweaks_lockscreen_guide_text_title">Hide Lock Screen help text</string>
+    <string name="tweaks_secure_window_title">Secure screenshots</string>
+    <string name="tweaks_secure_window_summaryOn">Screenshots blocked from inside secure apps</string>
+    <string name="tweaks_secure_window_summary">Screenshots allowed from inside secure apps</string>
+    <string name="tweaks_hide_iris_title">Hide iris preview</string>
+    <string name="tweaks_hide_iris_summary">Hide iris preview on lockscreen</string>
     <!--color-->
     <string name="tweaks_statusbar_clock_color">Clock colour</string>
     <string name="tweaks_statusbar_icon_color">System Icons colour</string>
@@ -178,7 +186,7 @@
     <string name="tweaks_qs_text_color_title">Tile Label Text colour</string>
     <string name="tweaks_link_statusbar_colors_title">Link Statusbar colours</string>
     <string name="tweaks_link_statusbar_colors_summary">Click to set all colours the same as Clock colour"</string>
-    <string name="tweaks_colorable_battery_icon_title">colourable Battery Icon</string>
+    <string name="tweaks_colorable_battery_icon_title">Colourable Battery Icon</string>
     <string name="tweaks_colorable_battery_icon_summary">Switch to the old style Battery Icon to allow custom colours</string>
     <!--MISC-->
     <string name="tweaks_csc_selection_title">CSC Selection</string>
@@ -297,4 +305,8 @@
     <string name="nightlyupdateinterval_hint">Input frequency in HOURS</string>
     <!--Matt-->
     <string name="matt_donation">Hey Guys! \n\nThis is Matt (@mwilky) and I really need your help. Please click the OK below to open RiCE WebPage and see what is all about!\n\nThank you! </string>
+    <!--ADS-->
+    <string name="addmob_id" translatable="false">ca-app-pub-3113797527117263~6103855801</string>
+    <string name="banner_home_footer" translatable="false">ca-app-pub-3113797527117263/6183746858</string>
+    <string name="interstitial_full_screen" translatable="false">ca-app-pub-3113797527117263/7764421839</string>
 </resources>

@@ -6,8 +6,10 @@ import android.app.FragmentTransaction;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.AnimationDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
@@ -17,10 +19,17 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.gms.ads.InterstitialAd;
 import com.ice.box.helpers.ChangeLog;
 import com.ice.box.helpers.TweaksHelper;
 
@@ -33,15 +42,19 @@ public class MainActivity extends AppCompatActivity implements
     protected NavigationView navigationView;
     private int mThemeId = R.style.ThemeLight;
     private TweaksHelper tweaksHelper;
-    private boolean isFragmentOpen;
+    public static boolean isFragmentOpen;
     private DrawerLayout drawer;
     private Toolbar toolbar;
+    private ImageView mAds;
+    private InterstitialAd mInterstitialAd;
+    private long countFullScreenAds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isNightly = sharedPref.getBoolean("isNightly", false);
+        countFullScreenAds = sharedPref.getLong("fullScreenAds", 0 );
         mThemeId = sharedPref.getInt("THEMEID", mThemeId);
         setTheme(mThemeId);
 
@@ -68,6 +81,7 @@ public class MainActivity extends AppCompatActivity implements
         Menu menu = navigationView.getMenu();
         switchFragment("Home", getString(R.string.app_name));
         navigationView.getMenu().getItem(0).setChecked(true);
+        doAdvertising();
     }
 
     @Override
@@ -110,6 +124,7 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             finish();
         }
+        //Log.d(DEBUGTAG, "back pressed");
     }
 
     @Override
@@ -174,54 +189,62 @@ public class MainActivity extends AppCompatActivity implements
                 switchFragment("Home", getString(R.string.app_name));
                 break;
             case R.id.nav_ui:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("UI", getString(R.string.nav_ui));
                 break;
             case R.id.nav_misc:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("Misc", getString(R.string.nav_misc));
                 break;
-/*            case R.id.colors:
-                isFragmentOpen = true;
-                switchFragment("Colors", getString(R.string.nav_colors));
-                break;*/
             case R.id.app:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("App", getString(R.string.nav_app));
                 break;
             case R.id.nav_colors_backuprestore:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsBackupRestore", getString(R.string.Backup_Restore));
                 break;
             case R.id.nav_colors_statusbar:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsStatusbar", getString(R.string.statusbar_color_preference_title));
                 break;
             case R.id.nav_colors_navbar:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsNavBar", getString(R.string.navbar_color_preference_title));
                 break;
             case R.id.nav_colors_header:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsHeader", getString(R.string.header_color_preference_title));
                 break;
             case R.id.nav_colors_qs:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsQuickSettings", getString(R.string.quick_settings_preference_title));
                 break;
             case R.id.nav_colors_notifcation:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("ColorsNotification", getString(R.string.notifications_color_preference_title));
                 break;
             case R.id.nav_license:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("License", getString(R.string.settings_license));
                 break;
             case R.id.nav_settings:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("Settings", getString(R.string.action_settings));
                 break;
             case R.id.nav_sys_info:
+                doInterstitialAd();
                 isFragmentOpen = true;
                 switchFragment("SysInfo", getString(R.string.nav_system_info));
                 break;
@@ -272,5 +295,98 @@ public class MainActivity extends AppCompatActivity implements
                 });
         alertDialog2.show();
 
+    }
+
+    ///Advertising
+    private void doAdvertising() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        //Check for premium and show ads if not
+        boolean isFreeVersion = (sharedPref.getBoolean(isFreeVersionKey, false));
+        if (!isFreeVersion) {
+            AdView mAdView = findViewById(R.id.adView);
+            if (mAdView != null) {
+                mAdView.setVisibility(View.GONE);
+                findViewById(R.id.adContainer).setVisibility(View.GONE);
+            }
+        } else {
+            final AdView mAdView = findViewById(R.id.adView);
+            if (mAdView != null) {
+                mAdView.setVisibility(View.VISIBLE);
+            }
+            AdRequest adRequest = new AdRequest.Builder().build();
+            if (mAdView != null) {
+                mAdView.loadAd(adRequest);
+            }
+            if (mAdView != null) {
+                mAdView.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        mAdView.setVisibility(View.GONE);
+                        mAds = (ImageView) findViewById(R.id.ads);
+                        if (mAds != null) {
+                            mAds.setBackgroundResource(R.drawable.banner_animation);
+                        }
+                        AnimationDrawable frameAnimation = null;
+                        if (mAds != null) {
+                            frameAnimation = (AnimationDrawable) mAds.getBackground();
+                        }
+                        if (frameAnimation != null) {
+                            frameAnimation.start();
+                        }
+                        if (mAds != null) {
+                            mAds.setVisibility(View.VISIBLE);
+                        }
+                        mAds.setOnClickListener(new View.OnClickListener() {
+                            public void onClick(View v) {
+                                isFragmentOpen = true;
+                                switchFragment("License", getString(R.string.settings_license));
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    }
+
+    private void doInterstitialAd() {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isFreeVersion = (sharedPref.getBoolean(isFreeVersionKey, false));
+        if (isFreeVersion) {
+            countFullScreenAds++;
+            //Log.d(TAG, "counter: " + countFullScreenAds);
+            sharedPref.edit().putLong("countFullScreenAds", countFullScreenAds).apply();
+            if (countFullScreenAds % 6 == 0) {
+                mInterstitialAd = new InterstitialAd(this);
+                mInterstitialAd.setAdUnitId(getResources().getString(R.string.interstitial_full_screen));
+                AdRequest adRequest = new AdRequest.Builder()
+                        .build();
+                mInterstitialAd.loadAd(adRequest);
+                mInterstitialAd.setAdListener(new AdListener() {
+                    @Override
+                    public void onAdLoaded() {
+                        mInterstitialAd.show();
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(int errorCode) {
+                        tweaksHelper.MakeToast(getResources().getString(R.string.free_version_popup2));
+                        final Toast tag = Toast.makeText(getBaseContext(), getResources().getString(R.string.free_version_popup2), Toast.LENGTH_SHORT);
+                        tag.show();
+                        new CountDownTimer(5000, 1000)
+                        {
+                            public void onTick(long millisUntilFinished) {tag.show();}
+                            public void onFinish() {tag.show();}
+                        }.start();
+                    }
+                });
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
+        sharedPref.edit().putLong("fullScreenAds", countFullScreenAds);
     }
 }

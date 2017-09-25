@@ -3,13 +3,13 @@
                   android:layout_width="fill_parent"
                   android:layout_height="fill_parent">
 
-    <PreferenceScreen
+<!--    <PreferenceScreen
         android:layout_width="fill_parent"
         android:layout_height="135.0dip"
         android:key="application"
-        android:layout="@layout/application"/>
+        android:layout="@layout/application"/>-->
 
-    <PreferenceCategory android:title="@string/lockscreen_preference_title"/>
+    <PreferenceCategory android:title="@string/camera_preference_title"/>
     <Preference
         android:defaultValue="5"
         android:icon="@drawable/ic_battery"
@@ -18,6 +18,13 @@
         android:title="@string/battery_percentage_flash_title"/>
 
     <PreferenceCategory android:title="@string/lockscreen_preference_title"/>
+    <SwitchPreference
+        android:defaultValue="false"
+        android:icon="@drawable/ic_iris"
+        android:key="tweaks_hide_iris"
+        android:summary="@string/tweaks_hide_iris_summary"
+        android:title="@string/tweaks_hide_iris_title"/>
+
     <SwitchPreference
         android:defaultValue="false"
         android:icon="@drawable/ic_lock"
@@ -48,4 +55,15 @@
         android:summary="@string/disabled"
         android:summaryOn="@string/tweaks_lockscreen_guide_text_summaryOn"
         android:title="@string/tweaks_lockscreen_guide_text_title"/>
+
+    <PreferenceCategory android:title="@string/misc_preference_title"/>
+
+    <SwitchPreference
+        android:defaultValue="true"
+        android:icon="@drawable/ic_security"
+        android:key="tweaks_secure_window"
+        android:summary="@string/tweaks_secure_window_summary"
+        android:summaryOn="@string/tweaks_secure_window_summaryOn"
+        android:title="@string/tweaks_secure_window_title" />
+
 </PreferenceScreen>
