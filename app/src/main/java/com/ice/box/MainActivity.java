@@ -23,6 +23,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.widget.ImageView;
 import android.widget.Toast;
 
@@ -60,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements
 
         tweaksHelper = new TweaksHelper(this);
 
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -306,7 +308,7 @@ public class MainActivity extends AppCompatActivity implements
             AdView mAdView = findViewById(R.id.adView);
             if (mAdView != null) {
                 mAdView.setVisibility(View.GONE);
-                findViewById(R.id.adContainer).setVisibility(View.GONE);
+                //findViewById(R.id.adContainer).setVisibility(View.GONE);
             }
         } else {
             final AdView mAdView = findViewById(R.id.adView);
