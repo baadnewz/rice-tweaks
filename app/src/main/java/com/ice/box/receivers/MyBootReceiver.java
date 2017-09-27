@@ -8,10 +8,8 @@ import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v4.content.WakefulBroadcastReceiver;
 
-import com.ice.box.helpers.SystemProperties;
-
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
-import static com.ice.box.helpers.Constants.isNightlyProp;
+import static com.ice.box.helpers.Constants.isNightlyKey;
 
 /**
  * Created by Adrian on 03.05.2017.
@@ -28,7 +26,7 @@ public class MyBootReceiver extends WakefulBroadcastReceiver {
         startWakefulService(context, startServiceIntent);*/
         //startWakefulService(context, scheduleAlarm());
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
-        boolean isNightly = SystemProperties.getBoolean(isNightlyProp, false);
+        boolean isNightly = sharedPref.getBoolean(isNightlyKey, false);
         boolean isFreeVersion = sharedPref.getBoolean(isFreeVersionKey, false);
 
         //Log.d(DEBUGTAG, "nightlyupdateinterval: " + checkinFreq);

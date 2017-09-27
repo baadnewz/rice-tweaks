@@ -64,7 +64,6 @@ public class SplashActivity extends AppCompatActivity {
         }
 
         final boolean isICE = sharedPref.getBoolean("isICE", false);
-        final int isAppUpdate = sharedPref.getInt("isAppUpdate", 1);
         isFreeVersion();
         isForceEnglish();
         isAppUpdate();
@@ -73,17 +72,14 @@ public class SplashActivity extends AppCompatActivity {
             public void run() {
                 gotRoot();
                 isSystemApp();
-                isICE();
                 resetDaily();
                 androidVersion();
-                isNotePort();
                 whatGalaxy();
                 //RUN the fetchers only if ROM is ICE
                 if (isICE) {
                     new getStableOnlineVersion().execute();
-                    if (SystemProperties.getBoolean(isNightlyProp, false)) {
-                        new getNightlyOnlineVersionAndChangelog().execute();
-                    }
+                    new getNightlyOnlineVersionAndChangelog().execute();
+                    boolean nightly = sharedPref.getBoolean(isNightlyKey, false);
                 }
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -257,21 +253,48 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void getLocalRenovateVersion() {
-        //LOCAL STABLE
-        String localStableVersion = SystemProperties.get(stableVersionProp);
-        assert localStableVersion != null;
-        if (localStableVersion.isEmpty()) {
-            localStableVersion = "1.0";
+        String[] displayID = SystemProperties.get("ro.build.display.id").split(" ");
+
+        //Check if its RenovateICE
+        if (!TweaksHelper.isEmptyString(displayID[0])) { //checks if ro.build.display.id is not empty
+            if (displayID[0].contains("RENOVATE")) {  //if ro.build.display.id is not empty check if it contains RENOVATE
+                //Contains RENOVATE so it's rice ROM\
+                Log.d(DEBUGTAG, "rice rom");
+                sharedPref.edit().putBoolean("isICE", true).apply();
+                //We know ROM is RiCE, let's check if NOTE or S8/S8+
+                if (displayID[2].contains("N")) { //check if  the 3rd word of ro.build.display.id 's value contains N
+                    //it contains N => note rom
+                    sharedPref.edit().putBoolean(isNote8PortKey, true).apply();
+                    Log.d(DEBUGTAG, "note rom");
+                } else {
+                    //it does not contain N => s8/s8+ rom
+                    sharedPref.edit().putBoolean(isNote8PortKey, false).apply();
+                    Log.d(DEBUGTAG, "dream rom");
+                }
+
+                //check if its nightly or stable
+                if (displayID[3].contains("r")) { //if 4th word of ro.build.display.id 's value contains r
+                    //is nightly
+                    sharedPref.edit().putBoolean(isNightlyKey, true).apply();
+                    //Write nightly version
+                      sharedPref.edit().putInt(localNightlyVersionKey,  Integer.parseInt(displayID[3].replaceAll
+                            ("[\\D]", ""))).apply();
+                } else {
+                    //is stable
+                    sharedPref.edit().putBoolean(isNightlyKey, false).apply();
+                    //write stable version
+                    sharedPref.edit().putString(localStableVersionTextKey, displayID[3]).apply();
+                    sharedPref.edit().putInt(localStableVersionKey, Integer.parseInt(displayID[3].replaceAll
+                            ("[\\D]", ""))).apply();
+                }
+
+            } else { // ro.build.display.id does not contain RENOVATE
+                sharedPref.edit().putBoolean("isICE", false).apply();
+            }
+
+        } else { // ro.build.display.id is empty its NOT rice
+            sharedPref.edit().putBoolean("isICE", false).apply();
         }
-        sharedPref.edit().putString(localStableVersionTextKey, localStableVersion).apply();
-        sharedPref.edit().putInt(localStableVersionKey, Integer.parseInt(localStableVersion.replaceAll
-                ("[\\D]", ""))).apply();
-
-        //LOCAL NIGHTLY
-        sharedPref.edit().putBoolean(isNightlyKey, SystemProperties.getBoolean(isNightlyProp, false)).apply();
-        sharedPref.edit().putInt(localNightlyVersionKey, SystemProperties.getInt("renovate.nightly.version", 1)).apply();
-
-
     }
 
     private void androidVersion() {

@@ -14,8 +14,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
+import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -79,7 +81,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         isInstalledDonation = (sharedPref.getBoolean("isInstalledDonation", false));
         isMonthly = (sharedPref.getBoolean("isMonthly", false));
         isYearly = (sharedPref.getBoolean("isYearly", false));
-        isPremium2 = (sharedPref.getBoolean("isPremium2", false));
+        isPremium2 = sharedPref.getBoolean("isPremium2", false);
         isPremium5 = (sharedPref.getBoolean("isPremium5", false));
         isPremium10 = (sharedPref.getBoolean("isPremium10", false));
         isFreeVersion = (sharedPref.getBoolean(isFreeVersionKey, false));
@@ -139,20 +141,26 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         checkPref = findPreference("icebox.monthly");
         if (isMonthly) {
             checkPref.setSelectable(false);
+            filterPref.setSummary(getResources().getString(R.string.item_already_purchased));
+            filterPref.setEnabled(false);
         }
 
         filterPref = findPreference("icebox.donation2");
         filterPref.setOnPreferenceClickListener(this);
         checkPref = findPreference("icebox.donation2");
-        if (isInstalledPro || isPremium2) {
+        if (isPremium2) {
             checkPref.setSelectable(false);
+            filterPref.setSummary(getResources().getString(R.string.item_already_purchased));
+            filterPref.setEnabled(false);
         }
 
         filterPref = findPreference("icebox.donation5");
         filterPref.setOnPreferenceClickListener(this);
         checkPref = findPreference("icebox.donation5");
-        if (isInstalledDonation || isPremium5) {
+        if (isPremium5) {
             checkPref.setSelectable(false);
+            filterPref.setSummary(getResources().getString(R.string.item_already_purchased));
+            filterPref.setEnabled(false);
         }
 
         filterPref = findPreference("icebox.donation10");
@@ -160,6 +168,8 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         checkPref = findPreference("icebox.donation10");
         if (isPremium10) {
             checkPref.setSelectable(false);
+            filterPref.setSummary(getResources().getString(R.string.item_already_purchased));
+            filterPref.setEnabled(false);
         }
 
         filterPref = findPreference("icebox.oldice");
@@ -168,6 +178,12 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
             //filterPref.setEnabled(false);
             filterPref.setSummary(getResources().getString(R.string.icebox_oldice_summary_binded) + " "
                     + googleAccount + "\n\n" + getResources().getString(R.string.icebox_oldice_summary_binded2));
+        }
+
+        //If we have any InAppBilling License Purchased there is not need for legacy licensing => we remove the preference
+        if (isPremium2 || isPremium5 || isPremium10) {
+            getPreferenceScreen().removePreference(filterPref);
+            getPreferenceScreen().removePreference(findPreference("icebox.oldice.category"));
         }
 
 
@@ -308,7 +324,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
 
 
     private void restartSelf() {
-        AlarmManager am = (AlarmManager)   getActivity().getSystemService(Context.ALARM_SERVICE);
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
 /*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
                 PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
                         | PendingIntent.FLAG_CANCEL_CURRENT));*/

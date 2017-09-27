@@ -1,5 +1,7 @@
 package com.ice.box.helpers;
 
+import android.content.Context;
+import android.content.Intent;
 /**
  * Created by Adrian on 23.05.2017.
  */
@@ -76,9 +78,6 @@ public class Constants {
     static public final String isNote8PortKey = "isNote8PortKey";
     static public final String googleAccountKey = "googleAccount";
     //build props
-    static public final String stableVersionProp = "renovateice_version";
-    static public final String isNightlyProp = "renovate.nightly";
-    static public final String nightlyVersionProp = "renovate.nightly.version";
     static public final String renovateFingerprintProp = "renovate.fingerprint.unlock";
     //links
     static public final String riceWebsiteLink = "http://renovate-ice.com/";

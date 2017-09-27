@@ -281,13 +281,18 @@
     <string name="clock_position">Clock Position</string>
     <string name="biometrics_settings_preferences">Biometrics</string>
     <!--LICENSE-->
+    <string name="item_already_purchased">Thank you item already purchased</string>
+    <string name="subscription_already_purchased">Thank you, you are already subscribed.</string>
+    <string name="subscription_summary">We recommend purchasing a subscription instead of an one time purchase,
+        it\'s cheaper when purchased and supports development continuously.
+        You can cancel it at any time</string>
     <string name="status">License Status</string>
     <string name="subscription_category">Subscription</string>
     <string name="subscription_monthly_title">Monthly Subscription</string>
-    <string name="donation_category">Donation</string>
-    <string name="icebox.donation2">Donation 2€</string>
-    <string name="icebox.donation5">Donation 5€</string>
-    <string name="icebox.donation10">Donation 10€</string>
+    <string name="donation_category">On time purchase</string>
+    <string name="icebox.donation2">One time 2€ purchase</string>
+    <string name="icebox.donation5">One time 5€ purchase</string>
+    <string name="icebox.donation10">One time 10€ purchase</string>
     <string name="legacy_category">Legacy Licensing</string>
     <string name="icebox_oldice_title">Old Key Activation</string>
     <string name="icebox_oldice_summary">\nUse this if you had previously purchased a Renovate Home Key App.

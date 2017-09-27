@@ -19,6 +19,11 @@
     </style>
   </head>
   <body>
+      $ 1.4.0
+          % Version 1.4.0
+          _ 2017-09-27
+          * various fixes
+          * if you get FC please wipe app's data
       $ 1.3.9
           % Version 1.3.9
           _ 2017-09-23

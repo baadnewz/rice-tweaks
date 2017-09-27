@@ -19,15 +19,16 @@ import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 
-import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.isNightlyKey;
 import static com.ice.box.helpers.Constants.isNote8PortKey;
-import static com.ice.box.helpers.Constants.nightlyVersionProp;
+import static com.ice.box.helpers.Constants.localNightlyVersionKey;
+import static com.ice.box.helpers.Constants.localStableVersionKey;
 import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
 import static com.ice.box.helpers.Constants.riceSvnLink;
-import static com.ice.box.helpers.Constants.stableVersionProp;
+import static com.ice.box.helpers.Constants.svnPassword;
+import static com.ice.box.helpers.Constants.svnUsername;
 
 
 /**
@@ -79,7 +80,7 @@ public class MyService extends IntentService {
             URL url;
             Authenticator.setDefault(new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("RiCEApp", "horse!)(GREEN84house".toCharArray());
+                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
                 }
             });
             HttpURLConnection urlConnection = null;
@@ -113,7 +114,7 @@ public class MyService extends IntentService {
                     (result.replaceAll("[^\\d.]", ""));
             sharedPref.edit().putInt(onlineNightlyVersionKey, nightliesOnlineCurrentRevision)
                     .apply();
-            int nightliesOfflineCurrentRevision = SystemProperties.getInt(nightlyVersionProp, 1);
+            int nightliesOfflineCurrentRevision = sharedPref.getInt(localNightlyVersionKey, 1);
             boolean isICE = (sharedPref.getBoolean("isICE", false));
             if (isICE && nightliesOnlineCurrentRevision > nightliesOfflineCurrentRevision)
                 tweaksHelper.createNightlyNotification();
@@ -130,7 +131,7 @@ public class MyService extends IntentService {
             URL url;
             Authenticator.setDefault(new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication("RiCEApp", "horse!)(GREEN84house".toCharArray());
+                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
                 }
             });
             HttpURLConnection urlConnection = null;
@@ -177,14 +178,10 @@ public class MyService extends IntentService {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            String romversionstr = SystemProperties.get(stableVersionProp);
-            if (TweaksHelper.isEmptyString(romversionstr)) {
-                romversionstr = "1.2";
-            }
-            int romversion = Integer.parseInt(romversionstr.replaceAll("[\\D]", ""));
-            int latestROMVersionInt = Integer.parseInt(result
+            int localROMVersion = sharedPref.getInt(localStableVersionKey, 12);
+            int onlineROMVersion = Integer.parseInt(result
                     .replaceAll("[\\D]", ""));
-            if (romversion < latestROMVersionInt) {
+            if (localROMVersion < onlineROMVersion) {
                 tweaksHelper.createRomNotification();
             }
         }
