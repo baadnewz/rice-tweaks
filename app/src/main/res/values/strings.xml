@@ -83,6 +83,7 @@
     <string name="romupdatenightly">Notify on Nightly updates</string>
     <string name="please_wait">Please Wait...</string>
     <string name="rebooting">Rebooting...</string>
+    <string name="fail_os_reboot">App couldn\'t reboot your device (probably is not system app), please reboot manually!</string>
     <string name="tweakshelper_reboot_system1">System Reboot required!</string>
     <string name="tweakshelper_reboot_sysui1">SystemUI Restart required!</string>
     <string name="tweakshelper_reboot_camera">Camera Restart required!</string>

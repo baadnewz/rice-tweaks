@@ -19,6 +19,10 @@
     </style>
   </head>
   <body>
+      $ 1.4.1
+          % Version 1.4.1
+          _ 2017-09-28
+          * suppress various errors
       $ 1.4.0
           % Version 1.4.0
           _ 2017-09-27

@@ -67,7 +67,7 @@ public class SplashActivity extends AppCompatActivity {
         isFreeVersion();
         isForceEnglish();
         isAppUpdate();
-        getLocalRenovateVersion();
+        readAndStoreROMVersion();
         new Thread() {
             public void run() {
                 gotRoot();
@@ -252,7 +252,7 @@ public class SplashActivity extends AppCompatActivity {
         }
     }
 
-    private void getLocalRenovateVersion() {
+    private void readAndStoreROMVersion() {
         String[] displayID = SystemProperties.get("ro.build.display.id").split(" ");
 
         //Check if its RenovateICE
@@ -277,15 +277,25 @@ public class SplashActivity extends AppCompatActivity {
                     //is nightly
                     sharedPref.edit().putBoolean(isNightlyKey, true).apply();
                     //Write nightly version
-                      sharedPref.edit().putInt(localNightlyVersionKey,  Integer.parseInt(displayID[3].replaceAll
-                            ("[\\D]", ""))).apply();
+                    try {
+                        sharedPref.edit().putInt(localNightlyVersionKey, Integer.parseInt(displayID[3].replaceAll
+                                ("[\\D]", ""))).apply();
+                    } catch (NumberFormatException e) {
+                        Log.i(DEBUGTAG, "Wrong  ro.build.display.id value, 4th word isn't a number");
+                        sharedPref.edit().putInt(localNightlyVersionKey, 1).apply();
+                    }
                 } else {
                     //is stable
                     sharedPref.edit().putBoolean(isNightlyKey, false).apply();
                     //write stable version
                     sharedPref.edit().putString(localStableVersionTextKey, displayID[3]).apply();
-                    sharedPref.edit().putInt(localStableVersionKey, Integer.parseInt(displayID[3].replaceAll
-                            ("[\\D]", ""))).apply();
+                    try {
+                        sharedPref.edit().putInt(localStableVersionKey, Integer.parseInt(displayID[3].replaceAll
+                                ("[\\D]", ""))).apply();
+                    }catch (NumberFormatException e) {
+                        Log.i(DEBUGTAG, "Wrong  ro.build.display.id value, 4th word isn't a number");
+                        sharedPref.edit().putInt(localStableVersionKey, 10).apply();
+                    }
                 }
 
             } else { // ro.build.display.id does not contain RENOVATE
