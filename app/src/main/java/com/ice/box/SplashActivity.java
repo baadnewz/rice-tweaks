@@ -35,7 +35,21 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-import static com.ice.box.helpers.Constants.*;
+import static com.ice.box.helpers.Constants.DEBUGTAG;
+import static com.ice.box.helpers.Constants.isFreeVersionKey;
+import static com.ice.box.helpers.Constants.isLegacyLicenseKey;
+import static com.ice.box.helpers.Constants.isNightlyKey;
+import static com.ice.box.helpers.Constants.isNote8PortKey;
+import static com.ice.box.helpers.Constants.localNightlyVersionKey;
+import static com.ice.box.helpers.Constants.localStableVersionKey;
+import static com.ice.box.helpers.Constants.localStableVersionTextKey;
+import static com.ice.box.helpers.Constants.nightliesChangelogKey;
+import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
+import static com.ice.box.helpers.Constants.onlineStableVersionKey;
+import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
+import static com.ice.box.helpers.Constants.riceSvnLink;
+import static com.ice.box.helpers.Constants.svnPassword;
+import static com.ice.box.helpers.Constants.svnUsername;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -398,7 +412,16 @@ public class SplashActivity extends AppCompatActivity {
                 }
             }
             if (!TweaksHelper.isEmptyString(latestROMVersion)) {
-                latestROMVersion = latestROMVersion.replace(stringdevice, "").trim();
+                if (!TweaksHelper.isEmptyString(SystemProperties.get("ro.product.board"))) {
+                    latestROMVersion = latestROMVersion.replace(stringdevice, "").trim();
+                } else {
+                    String[] latestROMVersionLong = latestROMVersion.split(" ");
+                    for( int i=0; i<latestROMVersionLong.length; i++)
+                    {
+                        latestROMVersion = latestROMVersionLong[i];
+                    }
+                  }
+
             }
             //Log.d(DEBUGTAG, "getStableOnlineVersion: " + latestROMVersion);
             return latestROMVersion;

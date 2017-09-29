@@ -299,4 +299,8 @@
     <string name="tweaks_secure_window_summary">Bildschirmfoto erlaubt</string>
     <string name="tweaks_hide_iris_title">Iris-Vorschau</string>
     <string name="tweaks_hide_iris_summary">Verstecke die Iris-Vorschau auf dem Sperrbildschirm</string>
+    <string name="fail_os_reboot">Die App kann dein Gerät nicht neustarten, vermutlich weil sie nicht als System-App installiert ist. Bitte manuell neustarten.</string>
+    <string name="item_already_purchased">Bereits gekauft, dankesehr.</string>
+    <string name="subscription_already_purchased">Du hast bereits ein monatliches Abonnement, dankesehr.</string>
+    <string name="subscription_summary">Wir empfehlen den Kauf eines Abonnements anstelle eines einmaligen Kaufs, es ist billiger, wenn es gekauft wird und unterstützt die Entwicklung kontinuierlich. Sie können es jederzeit widerrufen.</string>
 </resources>

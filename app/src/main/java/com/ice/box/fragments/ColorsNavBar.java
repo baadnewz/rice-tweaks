@@ -13,9 +13,6 @@ import com.ice.box.R;
 import com.ice.box.helpers.SeekDialog;
 import com.ice.box.helpers.TweaksHelper;
 
-import static com.ice.box.helpers.Constants.tweaks_header_icon_color;
-import static com.ice.box.helpers.Constants.tweaks_header_text_color;
-
 /**
  * Created by Adrian on 25.07.2017.
  */

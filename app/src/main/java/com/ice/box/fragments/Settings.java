@@ -1,8 +1,5 @@
 package com.ice.box.fragments;
 
-import android.app.AlarmManager;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,10 +13,8 @@ import com.ice.box.R;
 import com.ice.box.helpers.Constants;
 import com.ice.box.helpers.RootUtils;
 import com.ice.box.helpers.TweaksHelper;
-import com.ice.box.receivers.MyAlarmReceiver;
 import com.ice.box.receivers.MyBootReceiver;
 
-import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
 
 

@@ -21,7 +21,6 @@ import com.ice.box.receivers.NotificationReceiver;
 import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
 import static com.ice.box.helpers.Constants.riceWebsiteLink;
-import static com.ice.box.helpers.RootUtils.rootAccess;
 
 
 /**

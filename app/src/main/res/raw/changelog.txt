@@ -19,6 +19,12 @@
     </style>
   </head>
   <body>
+      $ 1.4.2
+          % Version 1.4.2
+          _ 2017-09-29
+          * improved InAppBilling
+          * updated German translations
+          * other fixes
       $ 1.4.1
           % Version 1.4.1
           _ 2017-09-28

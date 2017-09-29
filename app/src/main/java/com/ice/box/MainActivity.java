@@ -19,7 +19,6 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,7 +33,13 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.ice.box.helpers.ChangeLog;
 import com.ice.box.helpers.TweaksHelper;
 
-import static com.ice.box.helpers.Constants.*;
+import static com.ice.box.helpers.Constants.isFreeVersionKey;
+import static com.ice.box.helpers.Constants.isNightlyKey;
+import static com.ice.box.helpers.Constants.localNightlyVersionKey;
+import static com.ice.box.helpers.Constants.localStableVersionKey;
+import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
+import static com.ice.box.helpers.Constants.onlineStableVersionKey;
+import static com.ice.box.helpers.Constants.riceWebsiteLink;
 
 
 public class MainActivity extends AppCompatActivity implements
@@ -52,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
         super.onCreate(savedInstanceState);
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
         boolean isNightly = sharedPref.getBoolean("isNightly", false);
@@ -60,9 +66,6 @@ public class MainActivity extends AppCompatActivity implements
         setTheme(mThemeId);
 
         tweaksHelper = new TweaksHelper(this);
-
-        //requestWindowFeature(Window.FEATURE_NO_TITLE);
-        requestWindowFeature(Window.FEATURE_ACTION_BAR);
         setContentView(R.layout.activity_main);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

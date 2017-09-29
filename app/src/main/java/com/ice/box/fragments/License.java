@@ -3,32 +3,22 @@ package com.ice.box.fragments;
 import android.accounts.AccountManager;
 import android.app.AlarmManager;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.Preference;
-import android.preference.PreferenceCategory;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
-import android.text.Spannable;
-import android.text.SpannableString;
-import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.common.AccountPicker;
 import com.ice.box.MainActivity;
 import com.ice.box.R;
-import com.ice.box.SplashActivity;
 import com.ice.box.helpers.TweaksHelper;
 import com.ice.box.iab.MyBilling;
 
@@ -36,15 +26,12 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import java.util.Calendar;
 
 import static android.app.Activity.RESULT_OK;
 import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.googleAccountKey;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
 import static com.ice.box.helpers.Constants.isLegacyLicenseKey;
-import static com.ice.box.helpers.Constants.nightliesChangelogKey;
-import static com.ice.box.helpers.Constants.onlineStableVersionKey;
 import static com.ice.box.helpers.Constants.riceManagementFolder;
 import static com.ice.box.helpers.Constants.riceWebsiteLink;
 
@@ -221,6 +208,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                 } catch (Exception ignored) {
                     AlertDialogIabNotSupported();
                 }
+                break;
             case "icebox.oldice":
                 if (TweaksHelper.isEmptyString(googleAccount)) {
                     try {
@@ -233,6 +221,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                 } else {
                     tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast));
                 }
+                break;
         }
         return true;
     }
@@ -271,9 +260,6 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
             try {
                 url = new URL(
                         riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0]);
-/*                    url = new URL(
-                            "http://renovate-ice.com/svn/renovate-dream/trunk/scripts/FullWipe.sh"
-                    );*/
                 Log.d(DEBUGTAG, "URL: " + url);
                 urlConnection = (HttpURLConnection) url
                         .openConnection();

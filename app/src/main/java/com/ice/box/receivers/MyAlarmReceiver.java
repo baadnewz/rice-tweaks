@@ -3,11 +3,8 @@ package com.ice.box.receivers;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.ice.box.services.MyService;
-
-import static com.ice.box.helpers.Constants.DEBUGTAG;
 
 /**
  * Created by Adrian on 03.05.2017.

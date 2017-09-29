@@ -1,7 +1,5 @@
 package com.ice.box.helpers;
 
-import android.content.Context;
-import android.content.Intent;
 /**
  * Created by Adrian on 23.05.2017.
  */

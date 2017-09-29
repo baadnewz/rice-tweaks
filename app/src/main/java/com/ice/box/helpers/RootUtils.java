@@ -3,8 +3,6 @@ package com.ice.box.helpers;
 import android.content.Context;
 import android.util.Log;
 
-import com.ice.box.SplashActivity;
-
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -15,8 +13,6 @@ import java.io.OutputStreamWriter;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-
-import static com.ice.box.helpers.Constants.DEBUGTAG;
 
 /**
  * Created by Adrian on 02.05.2017.

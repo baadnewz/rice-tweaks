@@ -19,7 +19,6 @@ import com.ice.box.helpers.SeekDialog;
 import com.ice.box.helpers.TweaksHelper;
 
 import static com.ice.box.helpers.Constants.ScramblePinKey;
-import static com.ice.box.helpers.Constants.ShowNavbarKey;
 import static com.ice.box.helpers.Constants.batteryPercentageFlashKey;
 import static com.ice.box.helpers.Constants.hideIrisKey;
 import static com.ice.box.helpers.Constants.isNote8PortKey;
@@ -170,6 +169,10 @@ public class App extends PreferenceFragment implements
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
                 secureWindowKey, 1) == 1);
         checkPref.setChecked(checked);
+        if (!isNotePort) {
+            getPreferenceScreen().removePreference(findPreference(secureWindowKey));
+        }
+
 
         filterPref = findPreference(hideIrisKey);
         filterPref.setOnPreferenceClickListener(this);
@@ -177,6 +180,10 @@ public class App extends PreferenceFragment implements
         checked = (Settings.System.getInt(this.getContext().getContentResolver(),
                 hideIrisKey, 0) == 1);
         checkPref.setChecked(checked);
+        if (!isNotePort) {
+            getPreferenceScreen().removePreference(findPreference(hideIrisKey));
+        }
+
     }
 
     @Override

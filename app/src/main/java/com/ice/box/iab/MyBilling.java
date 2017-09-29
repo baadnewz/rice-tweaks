@@ -205,7 +205,7 @@ public class MyBilling {
                         oldSkus = new ArrayList<>();
                         oldSkus.add(SKU_ICE_PREMIUM_YEARLY);
                     }
-
+                    mHelper.flagEndAsync();
                     try {
                         mHelper.launchPurchaseFlow(
                                 activity,
@@ -228,7 +228,9 @@ public class MyBilling {
 
             @Override
             public void run() {
+                mHelper.flagEndAsync();
                 try {
+
                     mHelper.launchPurchaseFlow(activity, SKU_ICE_PREMIUM_2,
                             RC_REQUEST, mPurchaseFinishedListener, payload);
                 } catch (IabHelper.IabAsyncInProgressException e) {
@@ -243,6 +245,7 @@ public class MyBilling {
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                mHelper.flagEndAsync();
                 try {
                     mHelper.launchPurchaseFlow(activity, SKU_ICE_PREMIUM_5,
                             RC_REQUEST, mPurchaseFinishedListener, payload);
@@ -255,10 +258,12 @@ public class MyBilling {
     }
 
     public void Premium10() {
+
         activity.runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
+                mHelper.flagEndAsync();
                 try {
                     mHelper.launchPurchaseFlow(activity, SKU_ICE_PREMIUM_10,
                             RC_REQUEST, mPurchaseFinishedListener, payload);
@@ -352,7 +357,7 @@ public class MyBilling {
         alertDialog.setPositiveButton(context.getResources().getString(R.string.ok), new
                 DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        AlarmManager am = (AlarmManager)   context.getSystemService(Context.ALARM_SERVICE);
+                        AlarmManager am = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
 /*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
                 PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
                         | PendingIntent.FLAG_CANCEL_CURRENT));*/
