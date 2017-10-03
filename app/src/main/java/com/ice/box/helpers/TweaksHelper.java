@@ -71,6 +71,10 @@ public class TweaksHelper {
         Toast.makeText(mContext, string, Toast.LENGTH_LONG).show();
     }
 
+    public void MakeToastShort(String string) {
+        Toast.makeText(mContext, string, Toast.LENGTH_SHORT).show();
+    }
+
     public void createRomNotification() {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(mContext);
         String onlineRomVersionText = sharedPref.getString(onlineStableVersionTextKey, null);

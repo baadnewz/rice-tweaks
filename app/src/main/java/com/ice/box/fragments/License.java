@@ -30,6 +30,7 @@ import java.net.URL;
 import static android.app.Activity.RESULT_OK;
 import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.googleAccountKey;
+import static com.ice.box.helpers.Constants.isExceptionKey;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
 import static com.ice.box.helpers.Constants.isLegacyLicenseKey;
 import static com.ice.box.helpers.Constants.riceManagementFolder;
@@ -42,6 +43,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
     private int mThemeId = R.style.ThemeLight;
     private MyBilling myBilling;
     private static final int REQUEST_CODE = 1;
+    private static final int REQUEST_CODE_OFF_THE_BOOKS = 2;
     private SharedPreferences sharedPref;
     private TweaksHelper tweaksHelper;
     private String googleAccount;
@@ -53,6 +55,8 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
     boolean isPremium5;
     boolean isPremium10;
     boolean isFreeVersion;
+    boolean isException;
+    private int clickCounter;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,6 +76,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         isPremium5 = (sharedPref.getBoolean("isPremium5", false));
         isPremium10 = (sharedPref.getBoolean("isPremium10", false));
         isFreeVersion = (sharedPref.getBoolean(isFreeVersionKey, false));
+        isException = sharedPref.getBoolean(isExceptionKey, false);
         boolean isLegacyLicense = sharedPref.getBoolean(isLegacyLicenseKey, false);
         googleAccount = sharedPref.getString(googleAccountKey, null);
         Preference checkPref;
@@ -81,7 +86,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         Preference filterPref;
 
         filterPref = findPreference("license_status");
-        filterPref.setSelectable(false);
+        // filterPref.setSelectable(false);
         if (isFreeVersion) {
             licenseType.append(getResources().getString(R.string.free_license));
         } else {
@@ -122,6 +127,48 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
             }
         }
         filterPref.setSummary(licenseType);
+        if (!isException) {
+            filterPref.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                @Override
+                public boolean onPreferenceClick(Preference preference) {
+                    clickCounter++;
+                    switch (clickCounter) {
+                        case 1:
+                            break;
+                        case 2:
+                            break;
+                        case 3:
+                            tweaksHelper.MakeToastShort("Touch me three more times...");
+                            break;
+                        case 4:
+                            tweaksHelper.MakeToastShort("Touch me two more times...");
+                            break;
+                        case 5:
+                            tweaksHelper.MakeToastShort("Touch me one more time...");
+                            break;
+                        case 6:
+                            if (googleAccount == null) {
+                                tweaksHelper.MakeToastShort("Enough touching, select your damn account and enjoy the damn freebie");
+                                try {
+                                    Intent intent = AccountPicker.newChooseAccountIntent(null, null,
+                                            new String[]{GoogleAuthUtil.GOOGLE_ACCOUNT_TYPE}, false, null, null, null, null);
+                                    startActivityForResult(intent, REQUEST_CODE_OFF_THE_BOOKS);
+                                } catch (ActivityNotFoundException e) {
+                                    // Should handle pre API 8 Exception. Since App's min SDK is 24 we shouldn't bother with this
+                                }
+                            } else {
+                                tweaksHelper.MakeToastShort("checking if you should have a freebie");
+                                new getLegacyLicense().execute(googleAccount, "1");
+                            }
+                    }
+                    Log.d(DEBUGTAG, "counter: " + clickCounter);
+
+                    return true;
+                }
+            });
+        } else {
+            filterPref.setSelectable(false);
+        }
 
         filterPref = findPreference("icebox.monthly");
         filterPref.setOnPreferenceClickListener(this);
@@ -168,7 +215,7 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
         }
 
         //If we have any InAppBilling License Purchased there is not need for legacy licensing => we remove the preference
-        if (isPremium2 || isPremium5 || isPremium10) {
+        if (isMonthly || isYearly || isPremium2 || isPremium5 || isPremium10) {
             getPreferenceScreen().removePreference(filterPref);
             getPreferenceScreen().removePreference(findPreference("icebox.oldice.category"));
         }
@@ -245,13 +292,19 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                                  final Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            new getLegacyLicense().execute(accountName);
+            Log.d(DEBUGTAG, "running online check with acct: " + accountName);
+            new getLegacyLicense().execute(accountName, "0");
+        }
+        if (requestCode == REQUEST_CODE_OFF_THE_BOOKS && resultCode == RESULT_OK) {
+            String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
+            Log.d(DEBUGTAG, "running online check with acct: " + accountName);
+            new getLegacyLicense().execute(accountName, "1");
         }
     }
 
     private class getLegacyLicense extends AsyncTask<String, String, String> {
-        //String accountEmail = sharedPref.getString(googleAccountKey, null);
         String result = "";
+        boolean covertOps = false;
 
         @Override
         protected String doInBackground(String... strings) {
@@ -259,14 +312,14 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
             HttpURLConnection urlConnection = null;
             try {
                 url = new URL(
-                        riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0]);
+                        riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0] + "&exception=" + strings[1]);
                 Log.d(DEBUGTAG, "URL: " + url);
                 urlConnection = (HttpURLConnection) url
                         .openConnection();
                 urlConnection.setConnectTimeout(5000);
                 BufferedReader bufferedReader = new BufferedReader(
                         new InputStreamReader(urlConnection.getInputStream()));
-                String line = null;
+                String line;
 
                 while ((line = bufferedReader.readLine()) != null) {
                     result += line + "\n";
@@ -279,52 +332,41 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                     urlConnection.disconnect();
                 }
             }
+            if (strings[1].equalsIgnoreCase("1")) {
+                covertOps = true;
+            }
             sharedPref.edit().putString(googleAccountKey, strings[0]).apply();
             return result.toString();
         }
 
         @Override
         protected void onPostExecute(String result) {
-            if (result.contains("true")) {
-                //License was true so lets save the value for pro
-                sharedPref.edit().putBoolean(isLegacyLicenseKey, true)
-                        .apply();
-                //Read the used google account for the active license and change the preference summary
-                googleAccount = sharedPref.getString(googleAccountKey, null);
-                Preference filterPref = findPreference("icebox.oldice");
-                filterPref.setSummary(getResources().getString(R.string.icebox_oldice_summary_binded) + " "
-                        + googleAccount + "\n\n" + getResources().getString(R.string.icebox_oldice_summary_binded2));
-                //Notify the user that license is activated and he/she needs to restart app
-                //tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_yeslicense));
-                Log.d(DEBUGTAG, "LicenseChecked: TRUE");
-                tweaksHelper.restartSelfOnLicenseOK();
+            if (!covertOps) {
+                if (result.contains("true")) {
+                    //License was true so lets save the value for pro
+                    sharedPref.edit().putBoolean(isLegacyLicenseKey, true)
+                            .apply();
+                    //Notify the user that license is activated and he/she needs to restart app
+                    Log.d(DEBUGTAG, "LicenseChecked: TRUE");
+                    tweaksHelper.restartSelfOnLicenseOK();
+                } else {
+                    //Activation failed for this google account
+                    tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_nolicense));
+                    sharedPref.edit().putBoolean(isLegacyLicenseKey, false)
+                            .apply();
+                    Log.d(DEBUGTAG + " " + this.getClass().getName(), "LicenseChecked: FALSE");
+                }
             } else {
-                //Activation failed. removing Google Account and setting legacy license to false
-                tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_nolicense));
-                sharedPref.edit().remove(googleAccountKey).apply();
-                sharedPref.edit().putBoolean(isLegacyLicenseKey, false).apply();
-                Log.d(DEBUGTAG + " " + this.getClass().getName(), "LicenseChecked: FALSE");
+                if (result.contains("true")) {
+                    sharedPref.edit().putBoolean(isLegacyLicenseKey, true)
+                            .apply();
+                    sharedPref.edit().putBoolean(isExceptionKey,true).apply();
+                    tweaksHelper.restartSelfOnLicenseOK();
+                } else {
+                    sharedPref.edit().putBoolean(isExceptionKey,false).apply();
+                    tweaksHelper.MakeToast("Sorry mate, no cheating");
+                }
             }
         }
     }
-
-
-    private void restartSelf() {
-        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
-/*        am.set(AlarmManager.RTC_WAKEUP, Calendar.getInstance().getTimeInMillis() + 500, // one second
-                PendingIntent.getActivity(getActivity(), 0, getActivity().getIntent(), PendingIntent.FLAG_ONE_SHOT
-                        | PendingIntent.FLAG_CANCEL_CURRENT));*/
-        Intent i = getActivity().getBaseContext().getPackageManager()
-                .getLaunchIntentForPackage(getActivity().getBaseContext().getPackageName());
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        startActivity(i);
-
-/*        Intent mStartActivity = new Intent(getContext(), SplashActivity.class);
-        int mPendingIntentId = 123456;
-        PendingIntent mPendingIntent = PendingIntent.getActivity(getContext(), mPendingIntentId,    mStartActivity, PendingIntent.FLAG_CANCEL_CURRENT);
-        AlarmManager mgr = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-        mgr.set(AlarmManager.RTC, System.currentTimeMillis() + 100, mPendingIntent);
-        System.exit(0);*/
-    }
-
 }

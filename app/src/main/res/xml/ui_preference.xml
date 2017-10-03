@@ -291,6 +291,24 @@
         android:title="@string/tweaks_recent_key_title"
         android:summary="%s"/>
 
+    <ListPreference
+        android:defaultValue="0"
+        android:key="tweaks_custom_bixby"
+        android:entries="@array/tweaks_custom_bixby_entries"
+        android:entryValues="@array/tweaks_custom_bixby_values"
+        android:icon="@drawable/ic_bixby"
+        android:title="@string/tweaks_custom_bixby_title"
+        android:summary="%s" />
+
+    <ListPreference
+        android:defaultValue="0"
+        android:key="tweaks_custom_bixby_app"
+        android:entries="@array/tweaks_custom_bixby_app_entries"
+        android:entryValues="@array/tweaks_custom_bixby_app_values"
+        android:icon="@drawable/ic_bixby"
+        android:title="@string/tweaks_custom_bixby_app_title"
+        android:summary="%s" />
+
     <PreferenceCategory android:title="@string/window_animation"/>
 
     <ListPreference

@@ -303,4 +303,8 @@
     <string name="item_already_purchased">Bereits gekauft, dankesehr.</string>
     <string name="subscription_already_purchased">Du hast bereits ein monatliches Abonnement, dankesehr.</string>
     <string name="subscription_summary">Wir empfehlen den Kauf eines Abonnements anstelle eines einmaligen Kaufs, es ist billiger, wenn es gekauft wird und unterstützt die Entwicklung kontinuierlich. Sie können es jederzeit widerrufen.</string>
+    <string name="nosubscription">Diese Option ist nur im monatlichen Abonnement verfügar.</string>
+    <string name="tweaks_custom_bixby_app_title">Bixby-Knopf Belegung</string>
+    <string name="bixby_perapp_hint">Bixby-Knopf Belegung auf Benutzerdef. App setzen</string>
+    <string name="tweaks_custom_bixby_title">Bixby-Knopf Belegung</string>
 </resources>

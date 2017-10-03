@@ -42,32 +42,18 @@ import static com.ice.box.helpers.Constants.xdaNote8Port;
 import static com.ice.box.helpers.Constants.xdaS8;
 
 @SuppressWarnings("unused")
-public class Home extends PreferenceFragment implements Preference.OnPreferenceClickListener {
+public class Home extends PreferenceFragment implements Preference.OnPreferenceClickListener, SharedPreferences.OnSharedPreferenceChangeListener {
     StringBuilder licenseType = new StringBuilder();
+    SharedPreferences sharedPref;
     int counter;
     private int mThemeId = R.style.ThemeLight;
 
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         addPreferencesFromResource(R.xml.home_preference);
 
-        //Listener for on shared preference changed (updated)
-        PreferenceManager.getDefaultSharedPreferences(getContext()).registerOnSharedPreferenceChangeListener(
-                new SharedPreferences.OnSharedPreferenceChangeListener() {
-                    @Override
-                    public void onSharedPreferenceChanged(
-                            SharedPreferences sharedPreferences, String key) {
-                        if (key == onlineStableVersionKey) {
-                            Log.d(DEBUGTAG, "updated value for key: " + key);
-                            setPreferencesValuesForRomVersion();
-                        }
-                        if (key == nightliesChangelogKey) {
-                            Log.d(DEBUGTAG, "updated value for key: " + key);
-                            setPreferencesValuesForChangelog();
-                        }
-                    }
-                });
 
         String romstatus;
         String currentRomVersionText = sharedPref.getString(localStableVersionTextKey, null);
@@ -161,8 +147,6 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
-        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-        ;
         String nightliesChangelog = (sharedPref.getString(nightliesChangelogKey, ""));
         boolean isNightly = sharedPref.getBoolean(isNightlyKey, false);
         boolean isNote8Port = sharedPref.getBoolean(Constants.isNote8PortKey, false);
@@ -238,7 +222,6 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
     }
 
     private void setPreferencesValuesForRomVersion() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String romstatus;
         String currentRomVersionText = sharedPref.getString(localStableVersionTextKey, null);
         String onlineRomVersionText = sharedPref.getString(onlineStableVersionTextKey, null);
@@ -319,7 +302,6 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
     }
 
     private void setPreferencesValuesForChangelog() {
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         String nightliesChangelog = (sharedPref.getString(nightliesChangelogKey, ""));
         Preference filterPref;
 
@@ -352,5 +334,32 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
                         .commit();
             }
         }, 0);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+                                          String key) {
+        if (key == onlineStableVersionKey) {
+            Log.d(DEBUGTAG, "updated value for key: " + key);
+            setPreferencesValuesForRomVersion();
+        }
+        if (key == nightliesChangelogKey) {
+            Log.d(DEBUGTAG, "updated value for key: " + key);
+            setPreferencesValuesForChangelog();
+        }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }

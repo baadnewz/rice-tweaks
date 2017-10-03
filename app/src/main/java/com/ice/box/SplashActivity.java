@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.ice.box.helpers.RootUtils;
 import com.ice.box.helpers.SystemProperties;
@@ -26,6 +27,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.lang.reflect.Array;
 import java.net.Authenticator;
 import java.net.HttpURLConnection;
 import java.net.PasswordAuthentication;
@@ -36,6 +38,8 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import static com.ice.box.helpers.Constants.DEBUGTAG;
+import static com.ice.box.helpers.Constants.googleAccountKey;
+import static com.ice.box.helpers.Constants.isExceptionKey;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
 import static com.ice.box.helpers.Constants.isLegacyLicenseKey;
 import static com.ice.box.helpers.Constants.isNightlyKey;
@@ -48,8 +52,7 @@ import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
 import static com.ice.box.helpers.Constants.riceSvnLink;
-import static com.ice.box.helpers.Constants.svnPassword;
-import static com.ice.box.helpers.Constants.svnUsername;
+
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -76,7 +79,6 @@ public class SplashActivity extends AppCompatActivity {
         } catch (Exception ignored) {
 
         }
-
         final boolean isICE = sharedPref.getBoolean("isICE", false);
         isFreeVersion();
         isForceEnglish();
@@ -93,7 +95,7 @@ public class SplashActivity extends AppCompatActivity {
                 if (isICE) {
                     new getStableOnlineVersion().execute();
                     new getNightlyOnlineVersionAndChangelog().execute();
-                    boolean nightly = sharedPref.getBoolean(isNightlyKey, false);
+                    //boolean nightly = sharedPref.getBoolean(isNightlyKey, false);
                 }
                 Intent intent = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(intent);
@@ -306,7 +308,7 @@ public class SplashActivity extends AppCompatActivity {
                     try {
                         sharedPref.edit().putInt(localStableVersionKey, Integer.parseInt(displayID[3].replaceAll
                                 ("[\\D]", ""))).apply();
-                    }catch (NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         Log.i(DEBUGTAG, "Wrong  ro.build.display.id value, 4th word isn't a number");
                         sharedPref.edit().putInt(localStableVersionKey, 10).apply();
                     }
@@ -378,11 +380,6 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             URL url;
-            Authenticator.setDefault(new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
-                }
-            });
             HttpURLConnection urlConnection = null;
             try {
                 if (isNotePort) {
@@ -416,11 +413,10 @@ public class SplashActivity extends AppCompatActivity {
                     latestROMVersion = latestROMVersion.replace(stringdevice, "").trim();
                 } else {
                     String[] latestROMVersionLong = latestROMVersion.split(" ");
-                    for( int i=0; i<latestROMVersionLong.length; i++)
-                    {
+                    for (int i = 0; i < latestROMVersionLong.length; i++) {
                         latestROMVersion = latestROMVersionLong[i];
                     }
-                  }
+                }
 
             }
             //Log.d(DEBUGTAG, "getStableOnlineVersion: " + latestROMVersion);
@@ -448,11 +444,6 @@ public class SplashActivity extends AppCompatActivity {
         @Override
         protected String doInBackground(String... params) {
             URL url;
-            Authenticator.setDefault(new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
-                }
-            });
             HttpURLConnection urlConnection = null;
             try {
                 if (isNotePort) {

@@ -26,9 +26,6 @@ import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
 import static com.ice.box.helpers.Constants.riceSvnLink;
-import static com.ice.box.helpers.Constants.svnPassword;
-import static com.ice.box.helpers.Constants.svnUsername;
-
 
 /**
  * Created by Adrian on 03.05.2017.
@@ -77,11 +74,6 @@ public class MyService extends IntentService {
         @Override
         protected String doInBackground(String... strings) {
             URL url;
-            Authenticator.setDefault(new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
-                }
-            });
             HttpURLConnection urlConnection = null;
             try {
                 if (!isNote8Port) {
@@ -128,11 +120,6 @@ public class MyService extends IntentService {
         @Override
         protected String doInBackground(String... params) {
             URL url;
-            Authenticator.setDefault(new Authenticator() {
-                protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(svnUsername, svnPassword.toCharArray());
-                }
-            });
             HttpURLConnection urlConnection = null;
             try {
                 if (isNotePort == true) {

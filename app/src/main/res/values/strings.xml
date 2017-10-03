@@ -35,6 +35,7 @@
     <string name="free_license">Please consider supporting us by purchasing a license.</string>
     <string name="free_notification">\"Options available only in premium version. Please consider purchasing a key.\"</string>
     <string name="free_notification2">"Options available only in premium version. Please consider purchasing a key."</string>
+    <string name="nosubscription">"Options available only in monthly subscription version. Please consider subscribing"</string>
     <string name="error_license_flow">Error launching in-app purchases. Please relaunch the application!</string>
     <string name="donation_obsolete">Old app licensing detected.\nWith next update it will be deprecated, please contact Renovate Team via Telegram in order to activate your new legacy license.</string>
     <string name="donation2">Donation: 2€ License</string>
@@ -241,6 +242,7 @@
     <string name="immersive_global_on">Globally Enabled</string>
     <string name="immersive_category">Immersive Mods</string>
     <string name="immersive_perapp_hint">Immersive Mode (Per App) must be enabled</string>
+    <string name="bixby_perapp_hint">Set Bixby Remap to Custom app to enable this</string>
     <string name="immersive_perapp">Immersive Mode (Per App)</string>
     <string name="immersive_perapp_summary">Select Apps for Auto Immersion</string>
     <string name="immersive_perapp_title">Immersive Mode (Per App)</string>
@@ -267,6 +269,8 @@
     <string name="tweaks_fingerprint_unlock_summaryOn">Allow unlock by Fingerprint/Iris after reboot</string>
     <string name="tweaks_back_to_kill_title">Long press "Back" Button to Kill</string>
     <string name="tweaks_recent_key_title">"Recents" Button Long press behaviour</string>
+    <string name="tweaks_custom_bixby_title">Bixby Button Remap</string>
+    <string name="tweaks_custom_bixby_app_title">Bixby Button Custom App</string>
     <string name="notifications_icons">Notifications</string>
     <string name="battery_bar">Battery Bar</string>
     <string name="Backup_Restore">Backup/Restore colour settings</string>

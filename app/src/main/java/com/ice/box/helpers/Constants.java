@@ -75,6 +75,7 @@ public class Constants {
     static public final String ShowNavbarKey = "tweaks_show_navbar";
     static public final String isNote8PortKey = "isNote8PortKey";
     static public final String googleAccountKey = "googleAccount";
+    static public final String isExceptionKey = "isException";
     //build props
     static public final String renovateFingerprintProp = "renovate.fingerprint.unlock";
     //links

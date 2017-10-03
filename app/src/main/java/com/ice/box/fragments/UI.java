@@ -2,9 +2,11 @@ package com.ice.box.fragments;
 
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
@@ -26,7 +28,10 @@ import com.ice.box.helpers.SeekDialog;
 import com.ice.box.helpers.SystemProperties;
 import com.ice.box.helpers.TweaksHelper;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -34,8 +39,12 @@ import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.ShowNavbarKey;
 import static com.ice.box.helpers.Constants.allowCustomNavBarHeightKey;
 import static com.ice.box.helpers.Constants.backToKillKey;
+import static com.ice.box.helpers.Constants.isExceptionKey;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
+import static com.ice.box.helpers.Constants.isNightlyKey;
 import static com.ice.box.helpers.Constants.isNote8PortKey;
+import static com.ice.box.helpers.Constants.localNightlyVersionKey;
+import static com.ice.box.helpers.Constants.localStableVersionKey;
 import static com.ice.box.helpers.Constants.navBarHeightKey;
 import static com.ice.box.helpers.Constants.renovateFingerprintProp;
 
@@ -48,6 +57,8 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
     private TweaksHelper tweaksHelper;
     private boolean isFreeVersion;
     private ListPreference mRecentKey;
+    private ListPreference mBixbyRemap;
+    private ListPreference mBixbyCustomApp;
     private ListPreference mWindowAnimation;
     private ListPreference mTransititionAnimation;
     private ListPreference mAnimatorDuration;
@@ -132,31 +143,36 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
 
     public void onCreate(Bundle savedInstanceState) {
         SwitchPreference checkPref;
-        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+        final SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
         super.onCreate(savedInstanceState);
         addPreferencesFromResource(R.xml.ui_preference);
         Preference filterPref;
-/*        mThemeId = sharedPref.getInt("THEMEID", mThemeId);
-        if (mThemeId == R.style.ThemeDark) {
-            filterPref = findPreference("ui");
-            filterPref.setLayoutResource(R.layout.ui_dark);
-        }*/
+
+
         isFreeVersion = sharedPref.getBoolean(isFreeVersionKey, true);
+        boolean isMonthly = (sharedPref.getBoolean("isMonthly", false));
+        boolean isYearly = (sharedPref.getBoolean("isYearly", false));
+        boolean isException = sharedPref.getBoolean(isExceptionKey, false);
+        int currentRomVersion = sharedPref.getInt(localStableVersionKey, 1);
+        int nightliesOfflineCurrentRevision = sharedPref.getInt(localNightlyVersionKey, 1);
         boolean isGalaxyS8 = sharedPref.getBoolean("isGalaxyS8", false);
         boolean isGalaxyS7 = sharedPref.getBoolean("isGalaxyS7", false);
         boolean isNotePort = sharedPref.getBoolean(isNote8PortKey, false);
+        boolean isNightly = sharedPref.getBoolean(isNightlyKey, false);
+        boolean isICE = sharedPref.getBoolean("isICE", false);
+        final String ImmersiveListValue = Settings.Global.getString(this.getContext().getContentResolver(),
+                "policy_control");
+        final int bixbyRemapValue = Settings.System.getInt(getContext().getContentResolver(), "tweaks_custom_bixby", 0);
+
 
         tweaksHelper = new TweaksHelper(this.getContext());
         seekDialog = new SeekDialog(this.getContext());
 
-        filterPref = findPreference("tweaks_immersive_list");
-        filterPref.setOnPreferenceChangeListener(this);
         mImmersiveList = (ListPreference) findPreference("tweaks_immersive_list");
-        String ImmersiveListValue = Settings.Global.getString(this.getContext().getContentResolver(),
-                "policy_control");
+        mImmersiveList.setOnPreferenceChangeListener(this);
         if (isFreeVersion) {
-            CharSequence[] entries = { getString(R.string.immersive_global_off), getString(R.string.immersive_global_on) };
-            CharSequence[] entryValues = {"immersive.full=" , "immersive.full=*"};
+            CharSequence[] entries = {getString(R.string.immersive_global_off), getString(R.string.immersive_global_on)};
+            CharSequence[] entryValues = {"immersive.full=", "immersive.full=*"};
             mImmersiveList.setEntries(entries);
             mImmersiveList.setEntryValues(entryValues);
             try {
@@ -183,10 +199,8 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
             }
         }
 
-
-        filterPref = findPreference("immersive_perapp");
-        filterPref.setOnPreferenceChangeListener(this);
         immersivePerAppList = (MultiSelectListPreference) findPreference("immersive_perapp");
+        immersivePerAppList.setOnPreferenceChangeListener(this);
         if (isFreeVersion) {
             immersivePerAppList.setEnabled(false);
             immersivePerAppList.setSelectable(false);
@@ -201,31 +215,61 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 immersivePerAppList.setSummary(R.string.immersive_perapp_hint);
             }
         }
-        new Thread() {
+        new Thread(new Runnable() {
+            @Override
             public void run() {
                 PackageManager pm = getContext().getPackageManager();
-                List<ApplicationInfo> appListInfo = pm.getInstalledApplications(0);
+                Intent intent = new Intent()
+                        .setAction(Intent.ACTION_MAIN)
+                        .addCategory(Intent.CATEGORY_LAUNCHER);
+                List<ResolveInfo> list = pm.queryIntentActivities(intent, 0);
+                HashSet<String> packageNames = new HashSet<>(0);
+                List<ApplicationInfo> appListInfo = new ArrayList<>();
+
+                //adding unique packagenames to hashset
+                for (ResolveInfo resolveInfo : list) {
+                    packageNames.add(resolveInfo.activityInfo.packageName);
+                }
+
+                //get application infos and add them to arraylist
+                for (String packageName : packageNames) {
+                    try {
+                        appListInfo.add(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+                    } catch (PackageManager.NameNotFoundException e) {
+                        //Do Nothing
+                    }
+                }
+
                 Collections.sort(appListInfo, new ApplicationInfo.DisplayNameComparator(pm));
                 CharSequence[] entries = new CharSequence[appListInfo.size()];
                 CharSequence[] entryValues = new CharSequence[appListInfo.size()];
                 try {
                     int i = 0;
-                    for (ApplicationInfo p : appListInfo) {
-                        entries[i] = p.loadLabel(pm);
-                        entryValues[i] = p.packageName;
+                    for (ApplicationInfo applicationInfo : appListInfo) {
+                        entries[i] = applicationInfo.loadLabel(pm);
+                        entryValues[i] = applicationInfo.packageName;
                         i++;
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
                 immersivePerAppList.setEntries(entries);
                 immersivePerAppList.setEntryValues(entryValues);
+                //Read saved values in Global Settings, covert them and set them as default
+                // so that app wont be out of sync if it's data is wiped
+                if (!TweaksHelper.isEmptyString(ImmersiveListValue) && !ImmersiveListValue.equals("immersive.full=")
+                        || !TweaksHelper.isEmptyString(ImmersiveListValue) && !ImmersiveListValue.equals("immersive.full=*")) {
+                    String[] valuesGlobal = ImmersiveListValue.replace("immersive.full=", "").split(", ");
+                    Set<String> savedValues = new HashSet<>(Arrays.asList(valuesGlobal));
+                    immersivePerAppList.setValues(savedValues);
+                }
                 immersivePerAppList.setNegativeButtonText(R.string.cancel);
                 immersivePerAppList.setPositiveButtonText(R.string.choose);
-                //immersivePerAppList.setDialogIcon(R.mipmap.ic_launcher_white);
                 immersivePerAppList.setDialogTitle(R.string.immersive_perapp_summary);
+
             }
-        }.start();
+        }).start();
 
         filterPref = findPreference("tweaks_fingerprint_unlock");
         filterPref.setOnPreferenceClickListener(this);
@@ -374,125 +418,366 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 "tweaks_show_multi_user", 0) == 1);
         checkPref.setChecked(checked);
 
-        filterPref = findPreference("tweaks_recent_key_config");
-        filterPref.setOnPreferenceChangeListener(this);
-        if (isGalaxyS8)
-            getPreferenceScreen().removePreference(findPreference("tweaks_recent_key_config"));
-
-        filterPref = findPreference("window_animation_scale");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("transition_animation_scale");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("animator_duration_scale");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("tweaks_clock_position");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("tweaks_quick_qs_buttons");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("qs_tile_row");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("qs_tile_column");
-        filterPref.setOnPreferenceChangeListener(this);
-
-        filterPref = findPreference("battery_bar_thickness");
-        filterPref.setOnPreferenceChangeListener(this);
-
         mRecentKey = (ListPreference) findPreference("tweaks_recent_key_config");
+        mRecentKey.setOnPreferenceChangeListener(this);
+        if (isGalaxyS8) {
+            getPreferenceScreen().removePreference(mRecentKey);
+        }
 
+        mBixbyRemap = (ListPreference) findPreference("tweaks_custom_bixby");
+        mBixbyRemap.setValueIndex(bixbyRemapValue);
+
+        if (isICE) {
+            if (isNotePort) {
+                if (isNightly) {
+                    if (nightliesOfflineCurrentRevision < 82) {
+                        getPreferenceScreen().removePreference(mBixbyRemap);
+                    }
+                } else {
+                    if (currentRomVersion < 12) {
+                        getPreferenceScreen().removePreference(mBixbyRemap);
+                    }
+                }
+            } else {
+                if (isNightly) {
+                    if (nightliesOfflineCurrentRevision < 207) {
+                        getPreferenceScreen().removePreference(mBixbyRemap);
+                    }
+                } else {
+                    if (currentRomVersion < 52) {
+                        getPreferenceScreen().removePreference(mBixbyRemap);
+                    }
+                }
+            }
+        }
+
+        if (!isMonthly && !isException) {
+            mBixbyRemap.setEnabled(false);
+            mBixbyRemap.setSelectable(false);
+            mBixbyRemap.setSummary(getResources().getString(R.string.nosubscription));
+        } else {
+            mBixbyRemap.setOnPreferenceChangeListener(this);
+        }
+
+
+        mBixbyCustomApp = (ListPreference) findPreference("tweaks_custom_bixby_app");
+        if (isICE) {
+            if (isNotePort) {
+                if (isNightly) {
+                    if (nightliesOfflineCurrentRevision < 82) {
+                        getPreferenceScreen().removePreference(mBixbyCustomApp);
+                    }
+                } else {
+                    if (currentRomVersion < 12) {
+                        getPreferenceScreen().removePreference(mBixbyCustomApp);
+                    }
+                }
+            } else {
+                if (isNightly) {
+                    if (nightliesOfflineCurrentRevision < 207) {
+                        getPreferenceScreen().removePreference(mBixbyCustomApp);
+                    }
+                } else {
+                    if (currentRomVersion < 52) {
+                        getPreferenceScreen().removePreference(mBixbyCustomApp);
+                    }
+                }
+            }
+        }
+        if (!isMonthly && !isException) {
+            mBixbyCustomApp.setEnabled(false);
+            mBixbyCustomApp.setSelectable(false);
+            mBixbyCustomApp.setSummary(getResources().getString(R.string.nosubscription));
+        } else if (bixbyRemapValue != 3) {
+            mBixbyCustomApp.setEnabled(false);
+            mBixbyCustomApp.setSelectable(false);
+            mBixbyCustomApp.setSummary(getResources().getString(R.string.bixby_perapp_hint));
+        } else {
+            mBixbyCustomApp.setOnPreferenceChangeListener(this);
+            final String bixbySavedValue = Settings.System.getString(getContext().getContentResolver(), "tweaks_custom_bixby_app");
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    PackageManager pm = getContext().getPackageManager();
+                    Intent intent = new Intent()
+                            .setAction(Intent.ACTION_MAIN)
+                            .addCategory(Intent.CATEGORY_LAUNCHER);
+                    List<ResolveInfo> list = pm.queryIntentActivities(intent, 0);
+                    HashSet<String> packageNames = new HashSet<>(0);
+                    List<ApplicationInfo> appListInfo = new ArrayList<>();
+
+                    //adding unique packagenames to hashset
+                    for (ResolveInfo resolveInfo : list) {
+                        packageNames.add(resolveInfo.activityInfo.packageName);
+                    }
+
+                    //get application infos and add them to arraylist
+                    for (String packageName : packageNames) {
+                        try {
+                            appListInfo.add(pm.getApplicationInfo(packageName, PackageManager.GET_META_DATA));
+                        } catch (PackageManager.NameNotFoundException e) {
+                            //Do Nothing
+                        }
+                    }
+
+                    Collections.sort(appListInfo, new ApplicationInfo.DisplayNameComparator(pm));
+                    CharSequence[] entries = new CharSequence[appListInfo.size()];
+                    CharSequence[] entryValues = new CharSequence[appListInfo.size()];
+                    int j = 0;
+                    try {
+                        int i = 0;
+                        for (ApplicationInfo applicationInfo : appListInfo) {
+                            entries[i] = applicationInfo.loadLabel(pm);
+                            entryValues[i] = applicationInfo.packageName;
+                            if (!TweaksHelper.isEmptyString(bixbySavedValue)) {
+                                if (entryValues[i].equals(bixbySavedValue)) {
+                                    j = i;
+                                }
+                            }
+                            i++;
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    mBixbyCustomApp.setEntries(entries);
+                    mBixbyCustomApp.setEntryValues(entryValues);
+                    if (!TweaksHelper.isEmptyString(bixbySavedValue)) {
+                        try {
+                            mBixbyCustomApp.setValueIndex(j);
+                            mBixbyCustomApp.setDefaultValue(entries[j]);
+                        } catch (Exception e) {
+                            //suppressed exception
+                        }
+                    }
+
+
+                }
+            }).start();
+        }
+        //ListPreferences
+        //Window Animation Scale Preference
         mWindowAnimation = (ListPreference) findPreference("window_animation_scale");
+        //SET DEFAULT VALUE
         String globalWindowValue = Settings.Global.getString(this.getContext().getContentResolver(),
                 "window_animation_scale");
-        if (globalWindowValue == null || globalWindowValue.equals("0.0")) {
+        if (TweaksHelper.isEmptyString(globalWindowValue)) {
             mWindowAnimation.setValueIndex(4);
-        } else if (globalWindowValue.equals("0.25")) {
-            mWindowAnimation.setValueIndex(1);
-        } else if (globalWindowValue.equals("0.5")) {
-            mWindowAnimation.setValueIndex(2);
-        } else if (globalWindowValue.equals("0.75")) {
-            mWindowAnimation.setValueIndex(3);
-        } else if (globalWindowValue.equals("1.0")) {
-            mWindowAnimation.setValueIndex(4);
-        } else if (globalWindowValue.equals("1.25")) {
-            mWindowAnimation.setValueIndex(5);
-        } else if (globalWindowValue.equals("1.5")) {
-            mWindowAnimation.setValueIndex(6);
-        } else if (globalWindowValue.equals("1.75")) {
-            mWindowAnimation.setValueIndex(7);
-        } else if (globalWindowValue.equals("2.0")) {
-            mWindowAnimation.setValueIndex(8);
-        } else if (globalWindowValue.equals("5.0")) {
-            mWindowAnimation.setValueIndex(9);
-        } else if (globalWindowValue.equals("10.0")) {
-            mWindowAnimation.setValueIndex(10);
         } else {
-            Log.d(DEBUGTAG, "missed: ");
+            switch (globalWindowValue) {
+                case "0.0":
+                    mWindowAnimation.setValueIndex(4);
+                    break;
+                case "0.25":
+                    mWindowAnimation.setValueIndex(1);
+                    break;
+                case "0.5":
+                    mWindowAnimation.setValueIndex(2);
+                    break;
+                case "0.75":
+                    mWindowAnimation.setValueIndex(3);
+                    break;
+                case "1.0":
+                    mWindowAnimation.setValueIndex(4);
+                    break;
+                case "1.25":
+                    mWindowAnimation.setValueIndex(5);
+                    break;
+                case "1.5":
+                    mWindowAnimation.setValueIndex(6);
+                    break;
+                case "1.75":
+                    mWindowAnimation.setValueIndex(7);
+                    break;
+                case "2.0":
+                    mWindowAnimation.setValueIndex(8);
+                    break;
+                case "5.0":
+                    mWindowAnimation.setValueIndex(9);
+                    break;
+                case "10.0":
+                    mWindowAnimation.setValueIndex(10);
+                    break;
+                default:
+                    mWindowAnimation.setValueIndex(4);
+                    break;
+            }
         }
+        //Listener
+        mWindowAnimation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int index = 0;
+                CharSequence[] entries = mWindowAnimation.getEntryValues();
+                for (int i = 0; i < entries.length; i++) {
+                    if (entries[i].equals(newValue)) {
+                        index = i;
+                        break;
+                    }
+                }
+                String newWindowAnimation = (entries[index] + "");
+                try {
+                    Settings.Global.putString(
+                            getContext().getContentResolver(),
+                            "window_animation_scale",
+                            newWindowAnimation);
+                    Log.d(this.getClass().getName(), "Successful!");
+                } catch (Exception e) {
+                    tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+                }
+                return true;
+            }
+        });
 
+
+        //Transition Animation Scale Preference
         mTransititionAnimation = (ListPreference) findPreference("transition_animation_scale");
+        //Set default value
         String globalTransitionValue = Settings.Global.getString(this.getContext().getContentResolver(),
                 "transition_animation_scale");
-        if (globalTransitionValue == null || globalTransitionValue.equals("0.0")) {
+        if (TweaksHelper.isEmptyString(globalTransitionValue)) {
             mTransititionAnimation.setValueIndex(4);
-        } else if (globalTransitionValue.equals("0.25")) {
-            mTransititionAnimation.setValueIndex(1);
-        } else if (globalTransitionValue.equals("0.5")) {
-            mTransititionAnimation.setValueIndex(2);
-        } else if (globalTransitionValue.equals("0.75")) {
-            mTransititionAnimation.setValueIndex(3);
-        } else if (globalTransitionValue.equals("1.0")) {
-            mTransititionAnimation.setValueIndex(4);
-        } else if (globalTransitionValue.equals("1.25")) {
-            mTransititionAnimation.setValueIndex(5);
-        } else if (globalTransitionValue.equals("1.5")) {
-            mTransititionAnimation.setValueIndex(6);
-        } else if (globalTransitionValue.equals("1.75")) {
-            mTransititionAnimation.setValueIndex(7);
-        } else if (globalTransitionValue.equals("2.0")) {
-            mTransititionAnimation.setValueIndex(8);
-        } else if (globalTransitionValue.equals("5.0")) {
-            mTransititionAnimation.setValueIndex(9);
-        } else if (globalTransitionValue.equals("10.0")) {
-            mTransititionAnimation.setValueIndex(10);
         } else {
-            Log.d(DEBUGTAG, "missed: ");
+            switch (globalTransitionValue) {
+                case "0.0":
+                    mTransititionAnimation.setValueIndex(4);
+                    break;
+                case "0.25":
+                    mTransititionAnimation.setValueIndex(1);
+                    break;
+                case "0.5":
+                    mTransititionAnimation.setValueIndex(2);
+                    break;
+                case "0.75":
+                    mTransititionAnimation.setValueIndex(3);
+                    break;
+                case "1.0":
+                    mTransititionAnimation.setValueIndex(4);
+                    break;
+                case "1.25":
+                    mTransititionAnimation.setValueIndex(5);
+                    break;
+                case "1.5":
+                    mTransititionAnimation.setValueIndex(6);
+                    break;
+                case "1.75":
+                    mTransititionAnimation.setValueIndex(7);
+                    break;
+                case "2.0":
+                    mTransititionAnimation.setValueIndex(8);
+                    break;
+                case "5.0":
+                    mTransititionAnimation.setValueIndex(9);
+                    break;
+                case "10.0":
+                    mTransititionAnimation.setValueIndex(10);
+                    break;
+                default:
+                    mTransititionAnimation.setValueIndex(4);
+                    break;
+            }
         }
+        //Listener
+        mTransititionAnimation.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int index = 0;
+                CharSequence[] entries = mTransititionAnimation.getEntryValues();
+                for (int i = 0; i < entries.length; i++) {
+                    if (entries[i].equals(newValue)) {
+                        index = i;
+                        break;
+                    }
+                }
+                String newWindowAnimation = (entries[index] + "");
+                try {
+                    Settings.Global.putString(
+                            getContext().getContentResolver(),
+                            "transition_animation_scale",
+                            newWindowAnimation);
+                    Log.d(this.getClass().getName(), "Successful!");
+                } catch (Exception e) {
+                    tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+                }
+                return true;
+            }
+        });
 
+        //Animator Duration Scale
         mAnimatorDuration = (ListPreference) findPreference("animator_duration_scale");
+        //Setting default value
         String globalAnimationValue = Settings.Global.getString(this.getContext().getContentResolver(),
                 "animator_duration_scale");
-        if (globalAnimationValue == null || globalAnimationValue.equals("0.0")) {
+        if (TweaksHelper.isEmptyString(globalAnimationValue)) {
             mAnimatorDuration.setValueIndex(4);
-        } else if (globalAnimationValue.equals("0.25")) {
-            mAnimatorDuration.setValueIndex(1);
-        } else if (globalAnimationValue.equals("0.5")) {
-            mAnimatorDuration.setValueIndex(2);
-        } else if (globalAnimationValue.equals("0.75")) {
-            mAnimatorDuration.setValueIndex(3);
-        } else if (globalAnimationValue.equals("1.0")) {
-            mAnimatorDuration.setValueIndex(4);
-        } else if (globalAnimationValue.equals("1.25")) {
-            mAnimatorDuration.setValueIndex(5);
-        } else if (globalAnimationValue.equals("1.5")) {
-            mAnimatorDuration.setValueIndex(6);
-        } else if (globalAnimationValue.equals("1.75")) {
-            mAnimatorDuration.setValueIndex(7);
-        } else if (globalAnimationValue.equals("2.0")) {
-            mAnimatorDuration.setValueIndex(8);
-        } else if (globalAnimationValue.equals("5.0")) {
-            mAnimatorDuration.setValueIndex(9);
-        } else if (globalAnimationValue.equals("10.0")) {
-            mAnimatorDuration.setValueIndex(10);
         } else {
-            Log.d(DEBUGTAG, "missed: ");
+            switch (globalAnimationValue) {
+                case "0.0":
+                    mAnimatorDuration.setValueIndex(4);
+                    break;
+                case "0.25":
+                    mAnimatorDuration.setValueIndex(1);
+                    break;
+                case "0.5":
+                    mAnimatorDuration.setValueIndex(2);
+                    break;
+                case "0.75":
+                    mAnimatorDuration.setValueIndex(3);
+                    break;
+                case "1.0":
+                    mAnimatorDuration.setValueIndex(4);
+                    break;
+                case "1.25":
+                    mAnimatorDuration.setValueIndex(5);
+                    break;
+                case "1.5":
+                    mAnimatorDuration.setValueIndex(6);
+                    break;
+                case "1.75":
+                    mAnimatorDuration.setValueIndex(7);
+                    break;
+                case "2.0":
+                    mAnimatorDuration.setValueIndex(8);
+                    break;
+                case "5.0":
+                    mAnimatorDuration.setValueIndex(9);
+                    break;
+                case "10.0":
+                    mAnimatorDuration.setValueIndex(10);
+                    break;
+                default:
+                    mAnimatorDuration.setValueIndex(4);
+                    break;
+            }
         }
+        //Listener
+        mAnimatorDuration.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            @Override
+            public boolean onPreferenceChange(Preference preference, Object newValue) {
+                int index = 0;
+                CharSequence[] entries = mAnimatorDuration.getEntryValues();
+                for (int i = 0; i < entries.length; i++) {
+                    if (entries[i].equals(newValue)) {
+                        index = i;
+                        break;
+                    }
+                }
+                String newWindowAnimation = (entries[index] + "");
+                try {
+                    Settings.Global.putString(
+                            getContext().getContentResolver(),
+                            "animator_duration_scale",
+                            newWindowAnimation);
+                    Log.d(this.getClass().getName(), "Successful!");
+                } catch (Exception e) {
+                    tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+                }
+                return true;
+            }
+        });
+
 
         mClockPos = (ListPreference) findPreference("tweaks_clock_position");
+        mClockPos.setOnPreferenceChangeListener(this);
         String ClockPosValue = Settings.System.getString(this.getContext().getContentResolver(),
                 "tweaks_clock_position");
         try {
@@ -512,6 +797,7 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
         }
 
         mQsButtons = (ListPreference) findPreference("tweaks_quick_qs_buttons");
+        mQsButtons.setOnPreferenceChangeListener(this);
         String QsButtonsValue = Settings.System.getString(this.getContext().getContentResolver(),
                 "tweaks_quick_qs_buttons");
         if (QsButtonsValue == null || QsButtonsValue.equals("3")) {
@@ -531,6 +817,8 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
         }
 
         mQsRow = (ListPreference) findPreference("qs_tile_row");
+        mQsRow.setOnPreferenceChangeListener(this);
+
         String QsRowValue = Settings.Secure.getString(this.getContext().getContentResolver(),
                 "qs_tile_row");
         if (QsRowValue == null || QsRowValue.equals("2")) {
@@ -548,6 +836,7 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
         }
 
         mQsColumn = (ListPreference) findPreference("qs_tile_column");
+        mQsColumn.setOnPreferenceChangeListener(this);
         String QsColumnValue = Settings.Secure.getString(this.getContext().getContentResolver(),
                 "qs_tile_column");
         if (QsColumnValue == null || QsColumnValue.equals("2")) {
@@ -563,6 +852,7 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
         }
 
         mBatthickness = (ListPreference) findPreference("battery_bar_thickness");
+        mBatthickness.setOnPreferenceChangeListener(this);
         String BatThicknessValue = Settings.System.getString(this.getContext().getContentResolver(),
                 "battery_bar_thickness");
         if (BatThicknessValue == null || BatThicknessValue.equals("1")) {
@@ -859,11 +1149,11 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
                 navBarHeightDialog.show();
                 // Find all the IDs on the dialog (this has to be done after the dislog has been shown
                 // other wise you will crash the app
-                navBarHeightSeek = (SeekBar) navBarHeightDialog.findViewById(R.id.seekbar1);
-                navBarHeightValue = (TextView) navBarHeightDialog.findViewById(R.id.seek1Value);
-                Button navBarHeightMinus = (Button) navBarHeightDialog.findViewById(R.id.minus1);
-                Button navBarHeightPlus = (Button) navBarHeightDialog.findViewById(R.id.add1);
-                Button navBarHeightApply = (Button) navBarHeightDialog.findViewById(R.id.apply);
+                navBarHeightSeek = navBarHeightDialog.findViewById(R.id.seekbar1);
+                navBarHeightValue = navBarHeightDialog.findViewById(R.id.seek1Value);
+                Button navBarHeightMinus = navBarHeightDialog.findViewById(R.id.minus1);
+                Button navBarHeightPlus = navBarHeightDialog.findViewById(R.id.add1);
+                Button navBarHeightApply = navBarHeightDialog.findViewById(R.id.apply);
                 // Set the maximum the slider can go up to
                 navBarHeightSeek.setMax(navBarHeightSeekMax);
                 // Get the current value
@@ -991,6 +1281,38 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
             }
             return true;
         }
+        if (preference == mBixbyRemap) {
+            int index = 0;
+            CharSequence[] entries = ((ListPreference) preference).getEntryValues();
+            for (int i = 0; i < entries.length; i++) {
+                if (entries[i].equals(newValue)) {
+                    index = i;
+                    break;
+                }
+            }
+            int newint = Integer.parseInt(entries[index] + "");
+            try {
+                Settings.System.putInt(
+                        this.getContext().getContentResolver(),
+                        "tweaks_custom_bixby",
+                        newint);
+                Log.d(this.getClass().getName(), "Successful!");
+                if (newint != 3) {
+                    mBixbyCustomApp.setEnabled(false);
+                } else {
+                    mBixbyCustomApp.setEnabled(true);
+                }
+            } catch (Exception e) {
+                tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
+            }
+            //Log.d(DEBUGTAG, "selectedvalue: " + newint);
+/*            if (newint != 3) {
+                mBixbyCustomApp.setEnabled(false);
+            } else {
+                mBixbyCustomApp.setEnabled(true);
+            }*/
+            return true;
+        }
         if (preference == mRecentKey) {
             int index = 0;
             CharSequence[] entries = ((ListPreference) preference).getEntryValues();
@@ -1013,70 +1335,16 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
 
             return true;
         }
-        if (preference == mWindowAnimation) {
-            int index = 0;
-            CharSequence[] entries = ((ListPreference) preference).getEntryValues();
-            for (int i = 0; i < entries.length; i++) {
-                if (entries[i].equals(newValue)) {
-                    index = i;
-                    break;
-                }
-            }
-            String newWindowAnimation = (entries[index] + "");
+        if (preference == mBixbyCustomApp) {
             try {
-                Settings.Global.putString(
+                Settings.System.putString(
                         this.getContext().getContentResolver(),
-                        "window_animation_scale",
-                        newWindowAnimation);
-                Log.d(this.getClass().getName(), "Successful!");
+                        "tweaks_custom_bixby_app",
+                        newValue.toString());
             } catch (Exception e) {
                 tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
             }
-            return true;
-        }
-
-        if (preference == mTransititionAnimation) {
-            int index = 0;
-            CharSequence[] entries = ((ListPreference) preference).getEntryValues();
-            for (int i = 0; i < entries.length; i++) {
-                if (entries[i].equals(newValue)) {
-                    index = i;
-                    break;
-                }
-            }
-            String newTransitionAnimation = (entries[index] + "");
-            try {
-                Settings.Global.putString(
-                        this.getContext().getContentResolver(),
-                        "transition_animation_scale",
-                        newTransitionAnimation);
-                Log.d(this.getClass().getName(), "Successful!");
-            } catch (Exception e) {
-                tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
-            }
-            return true;
-        }
-
-        if (preference == mAnimatorDuration) {
-            int index = 0;
-            CharSequence[] entries = ((ListPreference) preference).getEntryValues();
-            for (int i = 0; i < entries.length; i++) {
-                if (entries[i].equals(newValue)) {
-                    index = i;
-                    break;
-                }
-            }
-            String newAnimatorScale = (entries[index] + "");
-            try {
-                Settings.Global.putString(
-                        this.getContext().getContentResolver(),
-                        "animator_duration_scale",
-                        newAnimatorScale);
-                Log.d(this.getClass().getName(), "Successful!");
-            } catch (Exception e) {
-                tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
-            }
-            return true;
+            Log.d(DEBUGTAG, "Bixby new val: " + newValue.toString());
         }
         if (preference == mClockPos) {
             int index = 0;
@@ -1198,13 +1466,10 @@ public class UI extends PreferenceFragment implements Preference.OnPreferenceCli
             } catch (Exception e) {
                 tweaksHelper.MakeToast(getResources().getString(R.string.error_write_settings));
             }
-            /*String newPerAppList[] = newValue.toString().replace("[", "").replace("]", "").split(", ");
-            Set<String> hashSet = new HashSet<String>(Arrays.asList(newPerAppList));
-            Log.d(DEBUGTAG, "newImmersiveListSlections: " + newPerAppList);
-            Log.d(DEBUGTAG, "newImmersiveListSlections2: " + hashSet);
-            return true;*/
-
+            return true;
         }
         return false;
     }
+
+
 }
