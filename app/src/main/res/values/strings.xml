@@ -35,7 +35,7 @@
     <string name="free_license">Please consider supporting us by purchasing a license.</string>
     <string name="free_notification">\"Options available only in premium version. Please consider purchasing a key.\"</string>
     <string name="free_notification2">"Options available only in premium version. Please consider purchasing a key."</string>
-    <string name="nosubscription">"Options available only in monthly subscription version. Please consider subscribing"</string>
+    <string name="nosubscription">"Options available only in monthly subscription version or if you have all 3 one time licenses bought. Please consider subscribing"</string>
     <string name="error_license_flow">Error launching in-app purchases. Please relaunch the application!</string>
     <string name="donation_obsolete">Old app licensing detected.\nWith next update it will be deprecated, please contact Renovate Team via Telegram in order to activate your new legacy license.</string>
     <string name="donation2">Donation: 2€ License</string>
@@ -271,6 +271,10 @@
     <string name="tweaks_recent_key_title">"Recents" Button Long press behaviour</string>
     <string name="tweaks_custom_bixby_title">Bixby Button Remap</string>
     <string name="tweaks_custom_bixby_app_title">Bixby Button Custom App</string>
+    <string name="tweaks_hard_home_wake_title">Disable hard press home wake</string>
+    <string name="tweaks_hard_home_wake_summary">Disable hard press home button to wake the device when screen off</string>
+    <string name="tweaks_mtp_notif_title">Disable MTP pop-up</string>
+    <string name="tweaks_mtp_notif_summary">Disable MTP pop-up when connected to pc</string>
     <string name="notifications_icons">Notifications</string>
     <string name="battery_bar">Battery Bar</string>
     <string name="Backup_Restore">Backup/Restore colour settings</string>

@@ -56,11 +56,9 @@ public class MyService extends IntentService {
         if (isICE) {
             if (!isNightly) {
                 //ROM is stable branch - run stable branch version fetch
-                //Log.d(DEBUGTAG, "Service running not nightly");
                 new romUpdate().execute();
             } else {
                 //ROM is nightly branch - run stable branch nightly fetch
-                //Log.d(DEBUGTAG, "Service running nightly");
                 new nightlyUpdate().execute();
             }
         }

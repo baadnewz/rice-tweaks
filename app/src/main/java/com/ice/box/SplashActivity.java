@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.ice.box.helpers.RootUtils;
 import com.ice.box.helpers.SystemProperties;
@@ -27,10 +26,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.lang.reflect.Array;
-import java.net.Authenticator;
 import java.net.HttpURLConnection;
-import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -44,6 +40,7 @@ import static com.ice.box.helpers.Constants.isFreeVersionKey;
 import static com.ice.box.helpers.Constants.isLegacyLicenseKey;
 import static com.ice.box.helpers.Constants.isNightlyKey;
 import static com.ice.box.helpers.Constants.isNote8PortKey;
+import static com.ice.box.helpers.Constants.licenseRatingKey;
 import static com.ice.box.helpers.Constants.localNightlyVersionKey;
 import static com.ice.box.helpers.Constants.localStableVersionKey;
 import static com.ice.box.helpers.Constants.localStableVersionTextKey;
@@ -51,7 +48,9 @@ import static com.ice.box.helpers.Constants.nightliesChangelogKey;
 import static com.ice.box.helpers.Constants.onlineNightlyVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionKey;
 import static com.ice.box.helpers.Constants.onlineStableVersionTextKey;
+import static com.ice.box.helpers.Constants.riceManagementFolder;
 import static com.ice.box.helpers.Constants.riceSvnLink;
+import static com.ice.box.helpers.Constants.riceWebsiteLink;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -80,7 +79,7 @@ public class SplashActivity extends AppCompatActivity {
 
         }
         final boolean isICE = sharedPref.getBoolean("isICE", false);
-        isFreeVersion();
+        licenseChecking();
         isForceEnglish();
         isAppUpdate();
         readAndStoreROMVersion();
@@ -142,7 +141,7 @@ public class SplashActivity extends AppCompatActivity {
             Runtime.getRuntime().exec("chmod 755 " + restore_colors);
             Runtime.getRuntime().exec("chmod 755 " + set_others);
         } catch (Exception e) {
-            Log.d(DEBUGTAG, "Failed to set scripts permissions");
+            Log.e(this.getClass().getName(), "Failed to set scripts permissions");
         }
 
     }
@@ -164,20 +163,24 @@ public class SplashActivity extends AppCompatActivity {
         sharedPref.edit().putBoolean("isDeviceRooted", RootUtils.isRootGranted()).apply();
     }
 
-    private void isFreeVersion() {
+    private void licenseChecking() {
         //Reading and writing old app keys values
         //boolean isInstalledPro = isPackageInstalledAndEnabled("com.renovate.premium") || isPackageInstalledAndEnabled("com.ice.premium");
         //boolean isInstalledDonation = isPackageInstalledAndEnabled("com.renovate.premium2") || isPackageInstalledAndEnabled("com.ice.premium2");
         //sharedPref.edit().putBoolean("isInstalledPro", isInstalledPro).apply();
         //sharedPref.edit().putBoolean("isInstalledDonation", isInstalledDonation).apply();
         //Reading In app billing values
+        String googleAccount = sharedPref.getString(googleAccountKey, null);
         boolean isMonthly = (sharedPref.getBoolean("isMonthly", false));
         boolean isYearly = (sharedPref.getBoolean("isYearly", false));
         boolean isPremium2 = (sharedPref.getBoolean("isPremium2", false));
         boolean isPremium5 = (sharedPref.getBoolean("isPremium5", false));
         boolean isPremium10 = (sharedPref.getBoolean("isPremium10", false));
-        //Reading and writing legacy license values
+        //Reading legacy license value
         boolean isLegacyLicense = sharedPref.getBoolean(isLegacyLicenseKey, false);
+        //Reading Exception license value
+        boolean isException = sharedPref.getBoolean(isExceptionKey, false);
+
 
         //Setting global boolean for premium
         if (!isMonthly && !isYearly && !isPremium2 && !isPremium5 && !isPremium10 && !isLegacyLicense) {
@@ -189,6 +192,32 @@ public class SplashActivity extends AppCompatActivity {
         } else {
             sharedPref.edit().putBoolean(isFreeVersionKey, false).apply();
         }
+        if (isLegacyLicense)
+            new checkLegacyLicense().execute(googleAccount, "0");
+
+        if (isException)
+            new checkLegacyLicense().execute(googleAccount, "1");
+
+/*        License rating
+        Legacy and Premium2 get 2 points each
+        Premium5 gets 5 points
+        Premium10 gets 10 points
+        Monthly subscription gets 16 points (all one time purchases combined -1 )
+        Exception gets same 17 points as monthly subscription*/
+        int licenseRating = 0;
+        if (isPremium2)
+            licenseRating = licenseRating + 2;
+        if (isLegacyLicense)
+            licenseRating = licenseRating + 2;
+        if (isPremium5)
+            licenseRating = licenseRating + 5;
+        if (isPremium10)
+            licenseRating = licenseRating + 10;
+        if (isMonthly)
+            licenseRating = licenseRating + 16;
+        if (isException)
+            licenseRating = licenseRating + 16;
+        sharedPref.edit().putInt(licenseRatingKey, licenseRating).apply();
     }
 
     private void isForceEnglish() {
@@ -274,18 +303,15 @@ public class SplashActivity extends AppCompatActivity {
         //Check if its RenovateICE
         if (!TweaksHelper.isEmptyString(displayID[0])) { //checks if ro.build.display.id is not empty
             if (displayID[0].contains("RENOVATE")) {  //if ro.build.display.id is not empty check if it contains RENOVATE
-                //Contains RENOVATE so it's rice ROM\
-                Log.d(DEBUGTAG, "rice rom");
+                //Contains RENOVATE so it's rice ROM
                 sharedPref.edit().putBoolean("isICE", true).apply();
                 //We know ROM is RiCE, let's check if NOTE or S8/S8+
                 if (displayID[2].contains("N")) { //check if  the 3rd word of ro.build.display.id 's value contains N
                     //it contains N => note rom
                     sharedPref.edit().putBoolean(isNote8PortKey, true).apply();
-                    Log.d(DEBUGTAG, "note rom");
                 } else {
                     //it does not contain N => s8/s8+ rom
                     sharedPref.edit().putBoolean(isNote8PortKey, false).apply();
-                    Log.d(DEBUGTAG, "dream rom");
                 }
 
                 //check if its nightly or stable
@@ -419,7 +445,6 @@ public class SplashActivity extends AppCompatActivity {
                 }
 
             }
-            //Log.d(DEBUGTAG, "getStableOnlineVersion: " + latestROMVersion);
             return latestROMVersion;
 
         }
@@ -430,7 +455,6 @@ public class SplashActivity extends AppCompatActivity {
                 sharedPref.edit().putString(onlineStableVersionTextKey, result).apply();
                 sharedPref.edit().putInt(onlineStableVersionKey, Integer.parseInt(result
                         .replaceAll("[\\D]", ""))).apply();
-                //Log.d(DEBUGTAG, "getStableOnlineVersion STORED");
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -497,7 +521,66 @@ public class SplashActivity extends AppCompatActivity {
                 sharedPref.edit().putString(nightliesChangelogKey,
                         getResources().getString(R.string.nightlies_no_connection)).apply();
             }
-            Log.d(DEBUGTAG, "getNightlyOnlineVersionAndChangelog STORED");
+        }
+    }
+
+    private class checkLegacyLicense extends AsyncTask<String, String, String> {
+        String result = "";
+        boolean exception = false;
+
+        @Override
+        protected String doInBackground(String... strings) {
+            URL url;
+            HttpURLConnection urlConnection = null;
+            try {
+                url = new URL(
+                        riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0] + "&exception=" + strings[1]);
+                urlConnection = (HttpURLConnection) url
+                        .openConnection();
+                urlConnection.setConnectTimeout(1000);
+                BufferedReader bufferedReader = new BufferedReader(
+                        new InputStreamReader(urlConnection.getInputStream()));
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    result += line + "\n";
+                }
+                bufferedReader.close();
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+            }
+            if (strings[1].equalsIgnoreCase("1")) {
+                exception = true;
+            }
+            return result.toString();
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (!exception) {
+                if (result.contains("false")) {
+                    sharedPref.edit().putBoolean(isLegacyLicenseKey, false)
+                            .apply();
+                    sharedPref.edit().putBoolean(isExceptionKey, false)
+                            .apply();
+                    Intent i = getApplicationContext().getPackageManager()
+                            .getLaunchIntentForPackage(getApplicationContext().getPackageName());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    getApplicationContext().startActivity(i);
+                }
+            } else {
+                if (result.contains("false")) {
+                    sharedPref.edit().putBoolean(isExceptionKey, false).apply();
+                    Intent i = getApplicationContext().getPackageManager()
+                            .getLaunchIntentForPackage(getApplicationContext().getPackageName());
+                    i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    getApplicationContext().startActivity(i);
+                }
+            }
         }
     }
 }

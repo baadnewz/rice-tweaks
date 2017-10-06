@@ -307,4 +307,8 @@
     <string name="tweaks_custom_bixby_app_title">Bixby-Knopf Belegung</string>
     <string name="bixby_perapp_hint">Bixby-Knopf Belegung auf Benutzerdef. App setzen</string>
     <string name="tweaks_custom_bixby_title">Bixby-Knopf Belegung</string>
+    <string name="tweaks_hard_home_wake_title">Festes Drücken der \"Home\"-Taste deaktivieren</string>
+    <string name="tweaks_hard_home_wake_summary">Festes Drücken der \"Home\"-Taste zum Aufwachen des Gerätes deaktivieren</string>
+    <string name="tweaks_mtp_notif_title">MTP-Meldung deaktivieren</string>
+    <string name="tweaks_mtp_notif_summary">MTP-Meldung deaktivieren wenn das Gerät an den Computer angeschlossen wird</string>
 </resources>

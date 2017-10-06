@@ -161,8 +161,6 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                                 new getLegacyLicense().execute(googleAccount, "1");
                             }
                     }
-                    Log.d(DEBUGTAG, "counter: " + clickCounter);
-
                     return true;
                 }
             });
@@ -292,12 +290,10 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                                  final Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            Log.d(DEBUGTAG, "running online check with acct: " + accountName);
             new getLegacyLicense().execute(accountName, "0");
         }
         if (requestCode == REQUEST_CODE_OFF_THE_BOOKS && resultCode == RESULT_OK) {
             String accountName = data.getStringExtra(AccountManager.KEY_ACCOUNT_NAME);
-            Log.d(DEBUGTAG, "running online check with acct: " + accountName);
             new getLegacyLicense().execute(accountName, "1");
         }
     }
@@ -313,7 +309,6 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
             try {
                 url = new URL(
                         riceWebsiteLink + riceManagementFolder + "/search.php?mail=" + strings[0] + "&exception=" + strings[1]);
-                Log.d(DEBUGTAG, "URL: " + url);
                 urlConnection = (HttpURLConnection) url
                         .openConnection();
                 urlConnection.setConnectTimeout(5000);
@@ -347,14 +342,12 @@ public class License extends PreferenceFragment implements Preference.OnPreferen
                     sharedPref.edit().putBoolean(isLegacyLicenseKey, true)
                             .apply();
                     //Notify the user that license is activated and he/she needs to restart app
-                    Log.d(DEBUGTAG, "LicenseChecked: TRUE");
                     tweaksHelper.restartSelfOnLicenseOK();
                 } else {
                     //Activation failed for this google account
                     tweaksHelper.MakeToast(getResources().getString(R.string.icebox_oldice_toast_nolicense));
                     sharedPref.edit().putBoolean(isLegacyLicenseKey, false)
                             .apply();
-                    Log.d(DEBUGTAG + " " + this.getClass().getName(), "LicenseChecked: FALSE");
                 }
             } else {
                 if (result.contains("true")) {

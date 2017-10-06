@@ -29,7 +29,6 @@ public class MyBootReceiver extends WakefulBroadcastReceiver {
         boolean isNightly = sharedPref.getBoolean(isNightlyKey, false);
         boolean isFreeVersion = sharedPref.getBoolean(isFreeVersionKey, false);
 
-        //Log.d(DEBUGTAG, "nightlyupdateinterval: " + checkinFreq);
         if (!isFreeVersion) {
             if (isNightly) {
                 if (sharedPref.getBoolean("nightlyupdate", false)) {

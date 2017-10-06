@@ -19,6 +19,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -33,6 +34,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.ice.box.helpers.ChangeLog;
 import com.ice.box.helpers.TweaksHelper;
 
+import static com.ice.box.helpers.Constants.DEBUGTAG;
 import static com.ice.box.helpers.Constants.isFreeVersionKey;
 import static com.ice.box.helpers.Constants.isNightlyKey;
 import static com.ice.box.helpers.Constants.localNightlyVersionKey;
@@ -130,7 +132,6 @@ public class MainActivity extends AppCompatActivity implements
         } else {
             finish();
         }
-        //Log.d(DEBUGTAG, "back pressed");
     }
 
     @Override
@@ -138,11 +139,19 @@ public class MainActivity extends AppCompatActivity implements
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         // Change Header logo according to theme
-        ImageView banner = (ImageView) findViewById(R.id.imageView);
+        ImageView banner = findViewById(R.id.imageView);
         if (mThemeId == R.style.ThemeDark) {
-            banner.setBackgroundResource(R.drawable.header_image_dark);
+            try {
+                banner.setBackgroundResource(R.drawable.header_image_dark);
+            } catch (NullPointerException e) {
+                Log.e(DEBUGTAG, this.getClass().getName());
+            }
         } else {
-            banner.setBackgroundResource(R.drawable.header_image);
+            try {
+                banner.setBackgroundResource(R.drawable.header_image);
+            } catch (NullPointerException e) {
+                Log.e(DEBUGTAG, this.getClass().getName());
+            }
         }
         return true;
     }

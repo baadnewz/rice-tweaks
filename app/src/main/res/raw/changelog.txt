@@ -19,6 +19,22 @@
     </style>
   </head>
   <body>
+      $ 1.4.7
+          % Version 1.4.7
+          _ 2017-10-06
+          * fixes
+      $ 1.4.6
+          % Version 1.4.6
+          _ 2017-10-063
+          * bixby remap improvements
+      $ 1.4.5
+          % Version 1.4.5
+          _ 2017-10-04
+          * fixed animation speed default value (again)
+      $ 1.4.4
+          % Version 1.4.4
+          _ 2017-10-04
+          * fixed animation speed default value
       $ 1.4.3
           % Version 1.4.3
           _ 2017-10-04

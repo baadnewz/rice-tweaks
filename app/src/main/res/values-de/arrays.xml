@@ -178,4 +178,24 @@
         <item>immersive.full=*</item>
         <item>immersive.full=com.app.package</item>
     </string-array>
+    <string-array name="tweaks_custom_bixby_entries">
+        <item>Standard</item>
+        <item>Taschenlampe schalten</item>
+        <item>Volle Bildschirmaufnahme</item>
+        <item>Teil. Bildschirmaufnahme</item>
+        <item>Aktuelle App schließen</item>
+        <item>Menü</item>
+        <item>Benutzerdef. App</item>
+    </string-array>
+    <string-array name="tweaks_custom_bixby_values">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>3</item>
+    </string-array>
+    <string-array name="tweaks_custom_bixby_app_entries" />
+    <string-array name="tweaks_custom_bixby_app_values" />
 </resources>

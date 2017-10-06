@@ -117,7 +117,6 @@ public class Settings extends PreferenceFragment implements
         filterPref.setOnPreferenceClickListener(this);
         checkPref = (SwitchPreference) findPreference("nightlyupdate");
         checked = (sharedPref.getBoolean("nightlyupdate", false));
-        //Log.d(DEBUGTAG, "checked nightlyupdate: " + checked);
         checkPref.setChecked(checked);
         if (!isICE) {
             getPreferenceScreen().removePreference(filterPref);
@@ -233,10 +232,6 @@ public class Settings extends PreferenceFragment implements
                         .isChecked())).apply();
                 sharedPref.edit().putBoolean("romupdate", false).apply();
                 Log.d(this.getClass().getName(), "SuccessfulXX!");
-
-               // Log.d(DEBUGTAG, "nightlyupdate: " + sharedPref.getBoolean("nightlyupdate", false));
-                //boolean nightlyupdate = sharedPref.getBoolean("nightlyupdate", false);
-                //if (nightlyupdate)
                 myBootReceiver.scheduleNightlyAlarm(getContext());
             } catch (Exception e) {
                 tweaksHelper.MakeToast(getResources().getString(R.string.toast_error_apply));

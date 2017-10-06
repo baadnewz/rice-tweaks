@@ -68,6 +68,8 @@ public class Constants {
     static public final String allowCustomNavBarHeightKey = "tweaks_custom_navbar_height";
     static public final String backToKillKey = "tweaks_back_to_kill";
     static public final String lockscreenRotationKey = "tweaks_lockscreen_rotation";
+    static public final String disableHardHomeWakeKey = "tweaks_disable_hard_home_wake";
+    static public final String disableMtpNotifKey = "tweaks_disable_mtp_notif";
     static public final String quickUnlockKey = "tweaks_quick_unlock";
     static public final String ScramblePinKey = "tweaks_scramble_pin";
     static public final String secureWindowKey = "tweaks_secure_window";
@@ -76,6 +78,7 @@ public class Constants {
     static public final String isNote8PortKey = "isNote8PortKey";
     static public final String googleAccountKey = "googleAccount";
     static public final String isExceptionKey = "isException";
+    static public final String licenseRatingKey = "licenseRating";
     //build props
     static public final String renovateFingerprintProp = "renovate.fingerprint.unlock";
     //links
@@ -87,16 +90,4 @@ public class Constants {
     //InAppBilling
     static public final String base64EncodedPublicKey = "";
     static public final String payload = "";
-    //SVN AUTH
-    static public final String svnUsername = "";
-    static public final String svnPassword = "";
-
-
-
-
-
-
-
-
-
 }

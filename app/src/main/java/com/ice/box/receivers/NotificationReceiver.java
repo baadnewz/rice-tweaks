@@ -28,56 +28,61 @@ public class NotificationReceiver extends BroadcastReceiver {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(context);
         notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
         boolean isNote8Port = sharedPref.getBoolean(Constants.isNote8PortKey, false);
-        if (intent.getAction().equals("romupdate")) {
-
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse(riceWebsiteLink));
-
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            notificationManager.cancel(4);
-        } else if ((intent.getAction().equals("romupdate_later"))) {
-            //Log.d(TAG, "romupdate_late");
-            notificationManager.cancel(4);
-        } else if (intent.getAction().equals("appupdate")) {
-            //Log.d(TAG, "appupdate");
-            intent = new Intent(Intent.ACTION_VIEW,
-                    Uri.parse("https://play.google.com/store/apps/details?id=com.ice.box"));
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            notificationManager.cancel(5);
-        } else if (intent.getAction().equals("appupdate_later")) {
-            //Log.d(TAG, "appupdate_later");
-            notificationManager.cancel(5);
-        } else if (intent.getAction().equals("reboot")) {
-            intent = new Intent(context, RestartOS.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            notificationManager.cancel(3);
-        } else if (intent.getAction().equals("reboot_later")) {
-            notificationManager.cancel(3);
-        } else if (intent.getAction().equals("systemui")) {
-            intent = new Intent(context, RestartSystemUI.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            notificationManager.cancel(2);
-        } else if (intent.getAction().equals("systemui_later")) {
-            notificationManager.cancel(2);
-        } else if (intent.getAction().equals("nightlyupdate")) {
-            if (isNote8Port) {
+        switch (intent.getAction()) {
+            case "romupdate":
                 intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(riceWebsiteLink + "nightlies_great-port.html"));
-            } else {
+                        Uri.parse(riceWebsiteLink));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                notificationManager.cancel(4);
+                break;
+            case "romupdate_later":
+                notificationManager.cancel(4);
+                break;
+            case "appupdate":
                 intent = new Intent(Intent.ACTION_VIEW,
-                        Uri.parse(riceWebsiteLink + "nightlies_dream.html"));
-            }
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-            context.startActivity(intent);
-            notificationManager.cancel(6);
-        } else if (intent.getAction().equals("nightlyupdate_later")) {
-            notificationManager.cancel(6);
-        } else {
-            Log.d(DEBUGTAG, "Notification Receiver error");
+                        Uri.parse("https://play.google.com/store/apps/details?id=com.ice.box"));
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                notificationManager.cancel(5);
+                break;
+            case "appupdate_later":
+                notificationManager.cancel(5);
+                break;
+            case "reboot":
+                intent = new Intent(context, RestartOS.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                notificationManager.cancel(3);
+                break;
+            case "reboot_later":
+                notificationManager.cancel(3);
+                break;
+            case "systemui":
+                intent = new Intent(context, RestartSystemUI.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                notificationManager.cancel(2);
+                break;
+            case "systemui_later":
+                notificationManager.cancel(2);
+                break;
+            case "nightlyupdate":
+                if (isNote8Port) {
+                    intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(riceWebsiteLink + "nightlies_great-port.html"));
+                } else {
+                    intent = new Intent(Intent.ACTION_VIEW,
+                            Uri.parse(riceWebsiteLink + "nightlies_dream.html"));
+                }
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                context.startActivity(intent);
+                notificationManager.cancel(6);
+                break;
+            case "nightlyupdate_later":
+                notificationManager.cancel(6);
+                break;
+
         }
     }
 }

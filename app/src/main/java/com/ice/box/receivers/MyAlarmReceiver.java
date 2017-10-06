@@ -15,6 +15,5 @@ public class MyAlarmReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Intent i = new Intent(context, MyService.class);
         context.startService(i);
-        //Log.d(DEBUGTAG, "Alarm fired");
     }
 }

@@ -83,8 +83,6 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
             filterPref.setLayoutResource(R.layout.header_image_dark);
         }
 
-        //Log.d(DEBUGTAG, "IsNightly: " + isNightly + " Lastest Nightly: " + nightliesOnlineCurrentRevision);
-
         filterPref = findPreference("buy_premium");
         filterPref.setOnPreferenceClickListener(this);
         if (isFreeVersion) {
@@ -233,8 +231,6 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
         int nightliesOfflineCurrentRevision = sharedPref.getInt(localNightlyVersionKey, 1);
         int onlineRomVersion = sharedPref.getInt(onlineStableVersionKey, 1);
         Preference filterPref;
-        //Log.d(DEBUGTAG, "onlineROMis: " + onlineRomVersion);
-        //Log.d(DEBUGTAG, "onlineNightlyis: " + nightliesOnlineCurrentRevision);
 
         filterPref = findPreference("rom_Version");
         filterPref.setOnPreferenceClickListener(this);
@@ -314,7 +310,7 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
                 filterPref.setSummary(getResources().getString(R.string.nightlies_no_connection));
             }
         } catch (Exception e) {
-            Log.d(DEBUGTAG, "Failed to set changelog summary");
+            Log.e(this.getClass().getName(), "Failed to set changelog summary");
         }
 
     }
@@ -340,11 +336,9 @@ public class Home extends PreferenceFragment implements Preference.OnPreferenceC
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
                                           String key) {
         if (key == onlineStableVersionKey) {
-            Log.d(DEBUGTAG, "updated value for key: " + key);
             setPreferencesValuesForRomVersion();
         }
         if (key == nightliesChangelogKey) {
-            Log.d(DEBUGTAG, "updated value for key: " + key);
             setPreferencesValuesForChangelog();
         }
     }

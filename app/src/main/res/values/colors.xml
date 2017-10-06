@@ -35,6 +35,8 @@
     <color name="loudvolume_icon_color">#795548</color>
     <color name="recents_icon_color">#558b2f</color>
     <color name="rotate_icon_color">#fdd835</color>
+    <color name="ic_mtp">#7cb342</color>
+    <color name="ic_wake_home">#fdd835</color>
     <!-- Home -->
     <color name="licence_color">#af5d86</color>
     <color name="rom_version_color">#6edfac</color>

@@ -262,6 +262,13 @@
         android:summaryOn="@string/visible"
         android:title="@string/tweaks_disable_brightness_warning_title"/>
 
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="tweaks_disable_mtp_notif"
+        android:icon="@drawable/ic_mtp"
+        android:summary="@string/tweaks_mtp_notif_summary"
+        android:title="@string/tweaks_mtp_notif_title"/>
+
     <PreferenceCategory android:title="@string/biometrics_settings_preferences"/>
 
     <SwitchPreference
@@ -308,6 +315,13 @@
         android:icon="@drawable/ic_bixby"
         android:title="@string/tweaks_custom_bixby_app_title"
         android:summary="%s" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="tweaks_disable_hard_home_wake"
+        android:icon="@drawable/ic_wake_home"
+        android:summary="@string/tweaks_hard_home_wake_summary"
+        android:title="@string/tweaks_hard_home_wake_title"/>
 
     <PreferenceCategory android:title="@string/window_animation"/>
 
